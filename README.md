@@ -1,7 +1,7 @@
 # Geminize
 Team Geminize's project for the 2023 lablab.ai Hackathon
 
-#Requirements
+# Requirements
 
 Install Python from: https://www.python.org/downloads/windows/
 
