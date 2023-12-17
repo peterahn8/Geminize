@@ -1,20 +1,47 @@
+import io
+
 from pathlib import Path
-from PIL import Image
+from PIL import Image, PngImagePlugin
 from decouple import config
+from flask import Flask
+from flask import send_from_directory
+from flask_socketio import SocketIO, send
 
 import google.generativeai as genai
 
 genai.configure(api_key=config('API_KEY'))
-
 model = genai.GenerativeModel('gemini-pro-vision')
 
-## using pathlib to use main.py as the starting point for filepaths
-image_path = Path(__file__).parent / 'images' / 'test.png'
-img = Image.open(image_path)
+# Web Stuff
+app = Flask(__name__)
+socketio = SocketIO(app)
 
-response = model.generate_content(["What is the first value in this image. Only respond with the value itself.", img], stream=True)
-response.resolve()
-print(response.text)
+@app.route("/", defaults={'path': ''})
+@app.route("/<path:path>")
+def main_route(path):
+    if path == '':
+        path = 'index.html'
+    return send_from_directory("../frontend", path)
+
+@socketio.on("drawing")
+def handle_drawing(data):
+    imgMem = Image.frombytes(mode="RGBA", size=(400, 400), data=data)
+
+    memBuffer = io.BytesIO()
+    imgMem.save(memBuffer, format='PNG')
+    # TODO: Delete this, save the image as a file to double check it
+    imgMem.save("output.png")
+    memBuffer.seek(0)
+    imgPNG = Image.open(memBuffer)
+
+    response = model.generate_content(["What do you think this image is.", imgPNG], stream=True)
+    response.resolve()
+    send(response.text)
+    print(response.text)
+
+socketio.run(app, host="0.0.0.0", port=3000)
+# Don't need this anymore?
+# app.run(host="0.0.0.0", port=3000)
 
 ## try this if you want to see all the properties of the 'response' object above
 # for key, value in vars(response).items():
