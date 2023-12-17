@@ -18,3 +18,7 @@ img = Image.open(image_path)
 response = model.generate_content(["What is the first value in this image. Only respond with the value itself.", img], stream=True)
 response.resolve()
 print(response.text)
+
+## try this if you want to see all the properties of the 'response' object above
+# for key, value in vars(response).items():
+#     print(f"{key}: {value}")
