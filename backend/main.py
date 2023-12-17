@@ -1,18 +1,15 @@
-import pathlib
-import textwrap
-
-from decouple import config
+from pathlib import Path
 from PIL import Image
+from decouple import config
+
 import google.generativeai as genai
 
 genai.configure(api_key=config('API_KEY'))
 
 model = genai.GenerativeModel('gemini-pro-vision')
 
-# response = model.generate_content("What is the meaning of life?")
-# print(response.text)
-
-image_path = './images/test.png' 
+## using pathlib to use main.py as the starting point for filepaths
+image_path = Path(__file__).parent / 'images' / 'test.png'
 img = Image.open(image_path)
 
 response = model.generate_content(["What is the first value in this image. Only respond with the value itself.", img], stream=True)
