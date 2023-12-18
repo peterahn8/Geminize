@@ -59,9 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Hide the 'New Game' button if joining an existing game
         newGameBtn.style.display = 'none';
-    } else {
-        // Display the "New Game" button
-        newGameBtn.style.display = 'block';
     }
 });
 
