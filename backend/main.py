@@ -33,7 +33,7 @@ def handle_drawing(data):
     memBuffer.seek(0)
     imgPNG = Image.open(memBuffer)
 
-    response = model.generate_content(["What do you think this image is.", imgPNG], stream=True)
+    response = model.generate_content(["What do you think this image is? Give a one word answer.", imgPNG], stream=True)
     response.resolve()
     send(response.text)
     print(response.text)
