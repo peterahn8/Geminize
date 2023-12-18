@@ -2,6 +2,9 @@ const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
+const newGameBtn = document.getElementById("newGameBtn");
+const log = document.getElementById("log");
+
 const blackBtn = document.getElementById("blackBtn");
 const redBtn = document.getElementById("redBtn");
 const orangeBtn = document.getElementById("orangeBtn");
@@ -10,10 +13,10 @@ const greenBtn = document.getElementById("greenBtn");
 const blueBtn = document.getElementById("blueBtn");
 const indigoBtn = document.getElementById("indigoBtn");
 const violetBtn = document.getElementById("violetBtn");
+
 const strokeSmallBtn = document.getElementById("strokeSmallBtn");
 const strokeMediumBtn = document.getElementById("strokeMediumBtn");
 const strokeLargeBtn = document.getElementById("strokeLargeBtn");
-const log = document.getElementById("log");
 
 const BLACK = '#000000';
 const RED = '#FF0000';
@@ -44,6 +47,18 @@ eraseBtn.addEventListener("click", function() {
         eraseBtn.textContent = "Erase";
     }
 });
+
+newGameBtn.addEventListener("click", function() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomString = '';
+    for (let i = 0; i < 8; i++) {
+        randomString += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+
+    console.log(randomString);
+    socket.emit('newGame', randomString);
+});
+
 
 blackBtn.addEventListener("click", function() { strokeColor = BLACK; });
 redBtn.addEventListener("click", function() { strokeColor = RED; });
