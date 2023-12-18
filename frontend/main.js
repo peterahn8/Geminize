@@ -1,13 +1,22 @@
 const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
 const clearBtn = document.getElementById("clearBtn");
+const eraseBtn = document.getElementById("eraseBtn");
 const log = document.getElementById("log");
 
 let globalClear;
+let isErasing;
+let socket;
 
 clearBtn.addEventListener("click", function() { globalClear() });
-
-let socket;
+eraseBtn.addEventListener("click", function() {
+    isErasing = !isErasing;
+    if (isErasing) {
+        eraseBtn.textContent = "Draw";
+    } else {
+        eraseBtn.textContent = "Erase";
+    }
+});
 
 var s1 = function(sketch) {
     sketch.setup = function() {
@@ -19,13 +28,18 @@ var s1 = function(sketch) {
         };
     }
     sketch.draw = function() {
-        sketch.stroke(0); // Set the line color to black
-        sketch.strokeWeight(4); // Set the thickness of the line
-
-        if (sketch.mouseIsPressed) {
-            sketch.line(sketch.pmouseX, sketch.pmouseY, sketch.mouseX, sketch.mouseY); // Draw a line from the previous mouse position to the current position
+        if (isErasing) {
+            sketch.erase();
+        } else {
+            sketch.noErase();
+            sketch.stroke(0);
+            sketch.strokeWeight(4);
         }
-    }
+    
+        if (sketch.mouseIsPressed) {
+            sketch.line(sketch.pmouseX, sketch.pmouseY, sketch.mouseX, sketch.mouseY);
+        }
+    };
 };
 
 function send() {
