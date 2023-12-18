@@ -2,14 +2,36 @@ const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
-const strokePicker = document.getElementById('strokePicker');
-const colorPicker = document.getElementById('colorPicker');
+const blackBtn = document.getElementById("blackBtn");
+const redBtn = document.getElementById("redBtn");
+const orangeBtn = document.getElementById("orangeBtn");
+const yellowBtn = document.getElementById("yellowBtn");
+const greenBtn = document.getElementById("greenBtn");
+const blueBtn = document.getElementById("blueBtn");
+const indigoBtn = document.getElementById("indigoBtn");
+const violetBtn = document.getElementById("violetBtn");
+const strokeSmallBtn = document.getElementById("strokeSmallBtn");
+const strokeMediumBtn = document.getElementById("strokeMediumBtn");
+const strokeLargeBtn = document.getElementById("strokeLargeBtn");
 const log = document.getElementById("log");
+
+const BLACK = '#000000';
+const RED = '#FF0000';
+const ORANGE = '#FFA500';
+const YELLOW = '#FFFF00';
+const GREEN = '#008000';
+const BLUE = '#0000FF';
+const INDIGO = '#4B0082';
+const VIOLET = '#8A2BE2';
+
+const strokeSmall = 2;
+const strokeMedium = 4;
+const strokeLarge = 10;
 
 let globalClear;
 let isErasing;
-let strokeSize = 4;
-let strokeColor = '#000000'; // default to black
+let strokeSize = strokeMedium; // default to medium stroke
+let strokeColor = '#000000'; // default to black color
 
 let socket;
 
@@ -22,12 +44,19 @@ eraseBtn.addEventListener("click", function() {
         eraseBtn.textContent = "Erase";
     }
 });
-strokePicker.addEventListener('input', function() {
-    strokeSize = this.value;
-});
-colorPicker.addEventListener('input', function() {
-    strokeColor = this.value;
-});
+
+blackBtn.addEventListener("click", function() { strokeColor = BLACK; });
+redBtn.addEventListener("click", function() { strokeColor = RED; });
+orangeBtn.addEventListener("click", function() { strokeColor = ORANGE; });
+yellowBtn.addEventListener("click", function() { strokeColor = YELLOW; });
+greenBtn.addEventListener("click", function() { strokeColor = GREEN; });
+blueBtn.addEventListener("click", function() { strokeColor = BLUE; });
+indigoBtn.addEventListener("click", function() { strokeColor = INDIGO; });
+violetBtn.addEventListener("click", function() { strokeColor = VIOLET; });
+
+strokeSmallBtn.addEventListener("click", function() { strokeSize = strokeSmall; });
+strokeMediumBtn.addEventListener("click", function() { strokeSize = strokeMedium; });
+strokeLargeBtn.addEventListener("click", function() { strokeSize = strokeLarge; });
 
 var s1 = function(sketch) {
     sketch.setup = function() {
