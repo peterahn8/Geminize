@@ -8,8 +8,9 @@ class Status(Enum):
     ABANDONED = 4
 
 class Game:
-    def __init__(self, room_id: int):
+    def __init__(self, room_id, leader: int):
         self.room_id = room_id # what the front end sends to backend
+        self.leader = leader # person that can start the game or maybe end the game
         self.status = Status.WAITING
         self.players_joined = [] # the same as the id from the socket connection
         self.current_word = None
@@ -64,9 +65,10 @@ class Game:
         Sets the game status to finished and updates the players' scores.
 
         Args:
-            winner: The player who won the game (optional).
+            winner: The player who won the game.
         """
         self.status = Status.FINISHED
+        self.winner = winner
         # Update players' scores based on winner/loser logic
 
     def choose_unused_word(self):
@@ -80,4 +82,4 @@ class Game:
                 break
 
     def __repr__(self):
-        return f"Room ID: {self.room_id}, Status: {self.status}, Players: {self.players_joined}, Current Word: {self.current_word}, Used Words: {self.used_words}, Start Time: {self.start_time}"
+        return f"Room ID: {self.room_id}, Leader: {self.leader}, Status: {self.status}, Players: {self.players_joined}, Current Word: {self.current_word}, Used Words: {self.used_words}, Start Time: {self.start_time}"
