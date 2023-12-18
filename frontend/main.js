@@ -19,14 +19,14 @@ const strokeSmallBtn = document.getElementById("strokeSmallBtn");
 const strokeMediumBtn = document.getElementById("strokeMediumBtn");
 const strokeLargeBtn = document.getElementById("strokeLargeBtn");
 
-const BLACK = '#000000';
-const RED = '#FF0000';
-const ORANGE = '#FFA500';
-const YELLOW = '#FFFF00';
-const GREEN = '#008000';
-const BLUE = '#0000FF';
-const INDIGO = '#4B0082';
-const VIOLET = '#8A2BE2';
+const BLACK = "#000000";
+const RED = "#FF0000";
+const ORANGE = "#FFA500";
+const YELLOW = "#FFFF00";
+const GREEN = "#008000";
+const BLUE = "#0000FF";
+const INDIGO = "#4B0082";
+const VIOLET = "#8A2BE2";
 
 const strokeSmall = 2;
 const strokeMedium = 4;
@@ -35,7 +35,7 @@ const strokeLarge = 10;
 let globalClear;
 let isErasing;
 let strokeSize = strokeMedium; // default to medium stroke
-let strokeColor = '#000000'; // default to black color
+let strokeColor = "#000000"; // default to black color
 
 let socket;
 
@@ -49,16 +49,32 @@ eraseBtn.addEventListener("click", function() {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const gameId = queryParams.get('gameId');
+
+    if (gameId) {
+        console.log("Attempting to join game with ID:", gameId);
+        socket.emit('join', gameId);
+
+        // Hide the 'New Game' button if joining an existing game
+        newGameBtn.style.display = 'none';
+    } else {
+        // Display the "New Game" button
+        newGameBtn.style.display = 'block';
+    }
+});
+
 newGameBtn.addEventListener("click", function() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomString = '';
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let randomString = "";
     for (let i = 0; i < 8; i++) {
         randomString += characters.charAt(Math.floor(Math.random() * characters.length));
     }
 
     sidDiv.innerHTML = randomString;
-    console.log(randomString);
-    socket.emit('join', randomString);
+    console.log("Generating a random string to use for 'gameId': " + randomString);
+    socket.emit("join", randomString);
 });
 
 blackBtn.addEventListener("click", function() { strokeColor = BLACK; });
