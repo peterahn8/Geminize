@@ -41,6 +41,7 @@ var s1 = function(sketch) {
     sketch.draw = function() {
         if (isErasing) {
             sketch.erase();
+            sketch.strokeWeight(strokeSize);
         } else {
             sketch.noErase();
             sketch.stroke(strokeColor);
