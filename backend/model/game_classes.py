@@ -8,8 +8,8 @@ class Status(Enum):
     ABANDONED = 4
 
 class Game:
-    def __init__(self, game_id: int):
-        self.game_id = game_id # what the front end sends to backend
+    def __init__(self, room_id: int):
+        self.room_id = room_id # what the front end sends to backend
         self.status = Status.WAITING
         self.players_joined = [] # the same as the id from the socket connection
         self.current_word = None
@@ -80,4 +80,4 @@ class Game:
                 break
 
     def __repr__(self):
-        return f"GameID: {self.game_id}, Status: {self.status}, Players: {self.players_joined}, Current Word: {self.current_word}, Used Words: {self.used_words}, Start Time: {self.start_time}"
+        return f"Room ID: {self.room_id}, Status: {self.status}, Players: {self.players_joined}, Current Word: {self.current_word}, Used Words: {self.used_words}, Start Time: {self.start_time}"
