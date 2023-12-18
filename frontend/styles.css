@@ -54,16 +54,6 @@ button {
     font-size: 16px;
 }
 
-#strokeSmallBtn::after {
-    content: 'S';
-}
-#strokeMediumBtn::after {
-    content: 'M';
-}
-#strokeLargeBtn::after {
-    content: 'L';
-}
-
 #log {
     margin-top: 10px;
     border: 1px solid #ccc;
