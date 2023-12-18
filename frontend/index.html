@@ -14,9 +14,14 @@
 <body>
     <div id="container">
         <canvas id="canvas0"></canvas>
+    </div>
+    <div>
         <button id="sendBtn" onclick="send()">Send</button>
         <button id="clearBtn">Clear</button>
         <button id="eraseBtn">Erase</button>
+        <label for="strokeSizePicker">Brush Size:</label>
+        <input type="range" id="strokePicker" min="1" max="20" value="4">
+        <input type="color" id="colorPicker" value="#000000">
         <div id="log">ai response:</div>
     </div>
 </body>

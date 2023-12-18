@@ -2,10 +2,15 @@ const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
+const strokePicker = document.getElementById('strokePicker');
+const colorPicker = document.getElementById('colorPicker');
 const log = document.getElementById("log");
 
 let globalClear;
 let isErasing;
+let strokeSize = 4;
+let strokeColor = '#000000'; // default to black
+
 let socket;
 
 clearBtn.addEventListener("click", function() { globalClear() });
@@ -16,6 +21,12 @@ eraseBtn.addEventListener("click", function() {
     } else {
         eraseBtn.textContent = "Erase";
     }
+});
+strokePicker.addEventListener('input', function() {
+    strokeSize = this.value;
+});
+colorPicker.addEventListener('input', function() {
+    strokeColor = this.value;
 });
 
 var s1 = function(sketch) {
@@ -32,10 +43,10 @@ var s1 = function(sketch) {
             sketch.erase();
         } else {
             sketch.noErase();
-            sketch.stroke(0);
-            sketch.strokeWeight(4);
+            sketch.stroke(strokeColor);
+            sketch.strokeWeight(strokeSize);
         }
-    
+        
         if (sketch.mouseIsPressed) {
             sketch.line(sketch.pmouseX, sketch.pmouseY, sketch.mouseX, sketch.mouseY);
         }
