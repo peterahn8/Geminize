@@ -4,6 +4,7 @@ const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
 const newGameBtn = document.getElementById("newGameBtn");
 const log = document.getElementById("log");
+const sidDiv = document.getElementById("sidDiv");
 
 const blackBtn = document.getElementById("blackBtn");
 const redBtn = document.getElementById("redBtn");
@@ -55,10 +56,10 @@ newGameBtn.addEventListener("click", function() {
         randomString += characters.charAt(Math.floor(Math.random() * characters.length));
     }
 
+    sidDiv.innerHTML = randomString;
     console.log(randomString);
-    socket.emit('newGame', randomString);
+    socket.emit('join', randomString);
 });
-
 
 blackBtn.addEventListener("click", function() { strokeColor = BLACK; });
 redBtn.addEventListener("click", function() { strokeColor = RED; });
