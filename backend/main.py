@@ -1,7 +1,6 @@
 import io
 
-from pathlib import Path
-from PIL import Image, PngImagePlugin
+from PIL import Image
 from decouple import config
 from flask import Flask
 from flask import send_from_directory
