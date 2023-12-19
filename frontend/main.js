@@ -112,6 +112,9 @@ function send() {
 
     console.log("this is gonna send");
     socket.emit("drawing", canvasPayload);
+
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = "waiting..."
 }
 
 function startSocket() {
@@ -128,6 +131,12 @@ function startSocket() {
         console.log("message from server:", event);
         log.innerHTML = log.innerHTML + `<br />${event}`
     });
+
+    socket.on("guessResponse", (data) => {
+        console.log("received AI guess from backend: " + data);
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = "Send";
+    })
 
     // Listen for errors
     socket.on("error", (error) => {

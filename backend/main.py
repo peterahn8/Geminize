@@ -3,7 +3,7 @@ import io
 from PIL import Image
 from decouple import config
 from flask import Flask, send_from_directory, request
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, emit
 
 import google.generativeai as genai
 
@@ -38,7 +38,8 @@ def handle_drawing(data):
 
     response = model.generate_content(["What do you think this image is? Give a one word answer.", imgPNG], stream=True)
     response.resolve()
-    send(response.text + " from: " + request.sid)
     print(response.text)
+
+    emit('guessResponse', response.text, room=request.sid)
 
 socketio.run(app, host="0.0.0.0", port=3000)
