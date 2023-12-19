@@ -12,7 +12,7 @@ genai.configure(api_key=config('API_KEY'))
 model = genai.GenerativeModel('gemini-pro-vision')
 
 app = Flask(__name__)
-socketio = SocketIO(app, max_http_buffer_size=1024 * 1024 * 10)
+socketio = SocketIO(app)
 server = Server()
 
 

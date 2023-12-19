@@ -78,6 +78,7 @@ function joinExistingRoom() {
 var s1 = sketch => {
     sketch.setup = () => {
         sketch.createCanvas(400, 400, canvas);
+        sketch.pixelDensity(1);
         sketch.background(255);
         globalClear = () => {
             sketch.clear();
@@ -152,6 +153,8 @@ function startSocket() {
     socket.on("disconnect", (event) => {
         console.log("connection to the server was closed:", event);
     });
+
+    console.log(socket.io.engine.transport.name)
 }
 
 // init
