@@ -3,6 +3,7 @@ const canvas = document.getElementById("canvas0");
 const wordDiv = document.getElementById("wordDiv");
 const winnerDiv = document.getElementById("winnerDiv");
 const copyBtn = document.getElementById("copyBtn");
+const sendBtn = document.getElementById("sendBtn");
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
 const createRoomBtn = document.getElementById("createRoomBtn");
@@ -35,6 +36,7 @@ function setupEventListeners() {
 
     copyBtn.addEventListener("click", copyToClipboard);
 
+    sendBtn.addEventListener("click", send);
     clearBtn.addEventListener("click", () => globalClear());
     eraseBtn.addEventListener("click", toggleEraseMode);
     startBtn.addEventListener("click", startGame);
@@ -61,6 +63,7 @@ function toggleEraseMode() {
 }
 
 function startGame() {
+    globalClear();
     socket.emit("start", "");
 }
 
@@ -167,12 +170,14 @@ function startSocket() {
 
     // Listen for the word to guess
     socket.on("showWordToGuess", (data) => {
+        sendBtn.disabled = false;
         startBtn.disabled = true;
         wordDiv.innerHTML = "Draw this word: " + data;
     })
 
     // Listen for game won
     socket.on("gameWon", (data) => {
+        sendBtn.disabled = true;
         startBtn.disabled = false;
         winnerDiv.innerHTML = "The winner is: " + data;
     })
