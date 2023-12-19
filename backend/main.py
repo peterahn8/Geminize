@@ -30,6 +30,7 @@ def handle_join(data):
 
     if not(server.room_exists(data)):
         server.create_game(player, data)
+        print("creating game room on leader")
 
     else: 
         server.add_player_to_game(player, data)

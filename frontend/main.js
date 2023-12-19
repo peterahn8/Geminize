@@ -3,6 +3,7 @@ const canvas = document.getElementById("canvas0");
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
 const createRoomBtn = document.getElementById("createRoomBtn");
+const startBtn = document.getElementById("startBtn");
 const log = document.getElementById("log");
 const inviteDiv = document.getElementById("inviteDiv");
 
@@ -31,6 +32,7 @@ function setupEventListeners() {
 
     clearBtn.addEventListener("click", () => globalClear());
     eraseBtn.addEventListener("click", toggleEraseMode);
+    startBtn.addEventListener("click", startGame)
 
     createRoomBtn.addEventListener("click", createNewRoom);
     document.addEventListener("DOMContentLoaded", joinExistingRoom);
@@ -46,6 +48,10 @@ function assignBrushSettings(buttonMap, action) {
 function toggleEraseMode() {
     isErasing = !isErasing;
     eraseBtn.textContent = isErasing ? "Draw" : "Erase";
+}
+
+function startGame() {
+    socket.emit("start");
 }
 
 function generateRoomId() {
@@ -66,9 +72,9 @@ function createNewRoom() {
 
 function joinExistingRoom() {
     const queryParams = new URLSearchParams(window.location.search);
-    const roomId = queryParams.get("roomId");
+    const roomId = queryParams.get("roomid");
     if (roomId) {
-        console.log("Attempting to join on roomId: ", roomId);
+        console.log("Attempting to join on roomid: ", roomId);
         socket.emit("join", roomId);
         createRoomBtn.style.display = "none";
     }
@@ -141,7 +147,7 @@ function startSocket() {
 
     socket.on("showStartButton", (data) => {
         console.log("show start button message from backend: " + data);
-        
+        startBtn.disabled = false;
     })
 
     // Listen for errors
