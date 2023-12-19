@@ -60,7 +60,7 @@ function toggleEraseMode() {
 }
 
 function startGame() {
-    socket.emit("start");
+    socket.emit("start", "");
 }
 
 function generateRoomId() {

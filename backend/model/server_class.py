@@ -11,7 +11,7 @@ class Server:
 
 
     def add_player_to_game(self, player, room_id):
-        game = self.get_game_from_from_room(room_id)
+        game = self.get_game_from_room(room_id)
         if game.full():
             print(f"room {room_id} is already full, {player} can't join")
             return
@@ -28,7 +28,7 @@ class Server:
             player: sid
         """
         if player not in self.player_to_room_dict:
-            self.player_to_room_dict[player] : room_id
+            self.player_to_room_dict[player] = room_id
         else:
             print(f"{player} is already assigned to another room: {self.player_to_room_dict[player]}")
 
@@ -37,13 +37,20 @@ class Server:
         self.room_id_to_game_dict[room_id] = Game(room_id, player)
 
 
-    def get_game_from_from_player(self, player):
+    def get_game_from_player(self, player):
         return self.room_id_to_game_dict[self.player_to_room_dict[player]]
 
 
-    def get_game_from_from_room(self, room_id):
+    def get_game_from_room(self, room_id):
         return self.room_id_to_game_dict[room_id]
     
 
     def game_waiting_for_start(self, room_id):
         return self.room_id_to_game_dict[room_id].status == Status.WAITING_FOR_START
+    
+
+    def start_game(self, player) -> Game:
+        # game should be updated with random word as current word and the status as in progress
+        game = self.get_game_from_player(player)
+        game.start_game()
+        return game
