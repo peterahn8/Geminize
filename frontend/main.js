@@ -1,5 +1,6 @@
 const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
+const wordDiv = document.getElementById("wordDiv")
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
 const createRoomBtn = document.getElementById("createRoomBtn");
@@ -32,7 +33,7 @@ function setupEventListeners() {
 
     clearBtn.addEventListener("click", () => globalClear());
     eraseBtn.addEventListener("click", toggleEraseMode);
-    startBtn.addEventListener("click", startGame)
+    startBtn.addEventListener("click", startGame);
 
     createRoomBtn.addEventListener("click", createNewRoom);
     document.addEventListener("DOMContentLoaded", joinExistingRoom);
@@ -139,15 +140,22 @@ function startSocket() {
         log.innerHTML = log.innerHTML + `<br />${event}`
     });
 
+    // Listen for the AI's guess
     socket.on("guessResponse", (data) => {
         console.log("received AI guess from backend: " + data);
         sendBtn.disabled = false;
         sendBtn.innerHTML = "Send";
     })
 
+    // Listen for when the game is ready to be started
     socket.on("showStartButton", (data) => {
         console.log("show start button message from backend: " + data);
         startBtn.disabled = false;
+    })
+
+    // Listen for the word to guess
+    socket.on("showWordToGuess", (data) => {
+        wordDiv.innerHTML = "Draw this word: " + data;
     })
 
     // Listen for errors
