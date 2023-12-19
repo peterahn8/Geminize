@@ -1,24 +1,26 @@
 from enum import Enum
 
+GAME_CAPACITY = 2
 
 class Status(Enum):
-    WAITING = 1
-    IN_PROGRESS = 2
-    FINISHED = 3
-    ABANDONED = 4
+    WAITING_FOR_PLAYERS = 1 # less than the max have joined
+    WAITING_FOR_START = 2 # lobby is full but the leaders has not pressed start
+    IN_PROGRESS = 3
+    FINISHED = 4
+    ABANDONED = 5
 
 class Game:
-    def __init__(self, room_id, leader: int):
+    def __init__(self, room_id: str, leader: str):
         self.room_id = room_id # what the front end sends to backend
         self.leader = leader # person that can start the game or maybe end the game
-        self.status = Status.WAITING
-        self.players_joined = [] # the same as the id from the socket connection
+        self.status = Status.WAITING_FOR_PLAYERS
+        self.players_joined = [leader] # the same as the id from the socket connection
         self.current_word = None
         self.used_words = set()
         self.start_time = None
         self.winner = None
 
-    def join_game(self, player):
+    def add_player(self, player):
         """
         Adds a player to the game.
 
@@ -26,8 +28,16 @@ class Game:
             player: The player object.
         """
         self.players_joined.append(player)
-        if len(self.players_joined) == 2:
-            self.start_game()
+        if self.full():
+            self.move_to_wait_for_start()
+
+    
+    def move_to_wait_for_start(self):
+        self.status = Status.WAITING_FOR_START
+
+        #TODO: stream message to the room that game is full
+        # front end will show start button
+
 
     def start_game(self):
         """
@@ -80,6 +90,10 @@ class Game:
             if word not in self.used_words:
                 self.current_word = word
                 break
+    
+    def full(self):
+        return len(self.players_joined) == GAME_CAPACITY
+
 
     def __repr__(self):
         return f"Room ID: {self.room_id}, Leader: {self.leader}, Status: {self.status}, Players: {self.players_joined}, Current Word: {self.current_word}, Used Words: {self.used_words}, Start Time: {self.start_time}"
