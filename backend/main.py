@@ -46,7 +46,7 @@ def handle_join(data):
 
 @socketio.on("drawing")
 def handle_drawing(data):
-    imgMem = Image.frombytes(mode="RGBA", size=(400, 400), data=data)
+    imgMem = Image.frombytes(mode="RGBA", size=(200, 200), data=data)
 
     memBuffer = io.BytesIO()
     imgMem.save(memBuffer, format='PNG')
