@@ -1,4 +1,5 @@
 import io
+import asyncio
 
 from PIL import Image
 from decouple import config
@@ -10,7 +11,32 @@ import google.generativeai as genai
 
 # TODO: Remove the model stuff from here, it was just for testing
 genai.configure(api_key=config('API_KEY'))
-model = genai.GenerativeModel('gemini-pro-vision')
+model = genai.GenerativeModel('gemini-pro-vision', generation_config=genai.GenerationConfig(temperature=0,max_output_tokens=100))
+
+# TODO: This is the real code path, but we are commenting it out and
+# using fake code to simulate a faster response
+# imgMem = Image.frombytes(mode="RGBA", size=(400, 400), data=data)
+
+# memBuffer = io.BytesIO()
+# imgMem.save(memBuffer, format='PNG')
+## TODO: Delete this, save the image as a file to double check it
+# imgMem.save("output.png")
+# memBuffer.seek(0)
+async def ai(filepath):
+    imgPNG = Image.open("output.png")
+
+    response = await model.generate_content_async([imgPNG, "You are a guessing bot. Guess this image. Give the shortest answer possible. Do not include punctuation in the answer."])
+
+    await response.resolve()
+    print(response.text)
+
+# emit('guessResponse', response.text, room=request.sid)
+async def main():
+    await asyncio.gather(ai(""), ai(""))
+
+asyncio.run(main())
+print("test")
+exit()
 
 app = Flask(__name__)
 socketio = SocketIO(app)
