@@ -138,6 +138,11 @@ function startSocket() {
         sendBtn.innerHTML = "Send";
     })
 
+    socket.on("showStartButton", (data) => {
+        console.log("show start button message from backend: " + data);
+        
+    })
+
     // Listen for errors
     socket.on("error", (error) => {
         console.log("server encountered an error:", error);
