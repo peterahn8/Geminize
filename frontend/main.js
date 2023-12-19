@@ -77,7 +77,7 @@ function joinExistingRoom() {
 // p5 stuff
 var s1 = sketch => {
     sketch.setup = () => {
-        sketch.createCanvas(200, 200, canvas);
+        sketch.createCanvas(400, 400, canvas);
         sketch.background(255);
         globalClear = () => {
             sketch.clear();

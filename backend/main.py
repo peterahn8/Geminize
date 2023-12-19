@@ -12,7 +12,7 @@ genai.configure(api_key=config('API_KEY'))
 model = genai.GenerativeModel('gemini-pro-vision')
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, max_http_buffer_size=1024 * 1024 * 10)
 server = Server()
 
 
@@ -46,7 +46,7 @@ def handle_join(data):
 
 @socketio.on("drawing")
 def handle_drawing(data):
-    imgMem = Image.frombytes(mode="RGBA", size=(200, 200), data=data)
+    imgMem = Image.frombytes(mode="RGBA", size=(400, 400), data=data)
 
     memBuffer = io.BytesIO()
     imgMem.save(memBuffer, format='PNG')
