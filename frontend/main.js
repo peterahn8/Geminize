@@ -66,8 +66,8 @@ function generateRoomId() {
 
 function createNewRoom() {
     const roomId = generateRoomId();
-    inviteDiv.innerHTML = "room id: " + roomId;
-    console.log("Generating a random 'roomId': " + roomId);
+    inviteDiv.innerHTML = "invite link: localhost:3000/?roomid=" + roomId;
+    console.log(`Attempting to join on roomid: "${roomId}" as the leader`);
     socket.emit("join", roomId);
 }
 
@@ -75,7 +75,7 @@ function joinExistingRoom() {
     const queryParams = new URLSearchParams(window.location.search);
     const roomId = queryParams.get("roomid");
     if (roomId) {
-        console.log("Attempting to join on roomid: ", roomId);
+        console.log(`Attempting to join on roomid: "${roomId}" as a follower`);
         socket.emit("join", roomId);
         createRoomBtn.style.display = "none";
     }
