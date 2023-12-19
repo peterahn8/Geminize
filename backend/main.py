@@ -37,12 +37,19 @@ def handle_join(data):
 
         # check game and send 
         if server.game_waiting_for_start(data):
-            game = server.get_game_from_from_room(data)
+            game = server.get_game_from_room(data)
             emit('showStartButton', ",".join(game.players_joined), room=data)
 
     # add mapping of player to room id so that backend can tell
     # which game to map requests to    
     server.add_player_to_room_mapping(player, data)
+
+
+@socketio.on("start")
+def handle_start(data):
+    # move game to start state, pick a random word, send word to front end
+    game  = server.start_game(request.sid)
+    emit('showWordToGuess', game.current_word, room=game.room_id)
 
 
 @socketio.on("drawing")

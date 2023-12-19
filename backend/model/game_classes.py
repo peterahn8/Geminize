@@ -1,7 +1,9 @@
 from enum import Enum
+import random
+import datetime
 
 GAME_CAPACITY = 2
-
+WORD_BANK = ["dog", "cat", "smiley face", "bus", "sun", "chicken", "apple"]
 class Status(Enum):
     WAITING_FOR_PLAYERS = 1 # less than the max have joined
     WAITING_FOR_START = 2 # lobby is full but the leaders has not pressed start
@@ -45,7 +47,7 @@ class Game:
         """
         self.status = Status.IN_PROGRESS
         self.choose_unused_word()
-        self.start_time = datetime.now()
+        self.start_time = datetime.datetime.now()
 
     def guess_word(self, player, guess):
         """
@@ -86,7 +88,7 @@ class Game:
         Picks a random word from the word bank that hasn't been used in this game yet.
         """
         while True:
-            word = random.choice(word_bank)  # Replace `word_bank` with your actual word bank
+            word = random.choice(WORD_BANK)  # Replace `word_bank` with your actual word bank
             if word not in self.used_words:
                 self.current_word = word
                 break
