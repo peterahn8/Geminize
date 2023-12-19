@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,31 +10,48 @@
 
     <script src="./p5.js"></script>
     <!-- Maybe switch this out with a local copy? -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+        integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+        crossorigin="anonymous"></script>
     <script src="./main.js" defer></script>
 </head>
+
 <body>
     <div id="container">
         <canvas id="canvas0"></canvas>
-    </div>
-    <div>
-        <button id="sendBtn" onclick="send()">Send</button>
-        <button id="clearBtn">Clear</button>
-        <button id="eraseBtn">Erase</button>
-        <button id="blackBtn" class="strokeColor"></button>
-        <button id="redBtn" class="strokeColor"></button>
-        <button id="orangeBtn" class="strokeColor"></button>
-        <button id="yellowBtn" class="strokeColor"></button>
-        <button id="greenBtn" class="strokeColor"></button>
-        <button id="blueBtn" class="strokeColor"></button>
-        <button id="indigoBtn" class="strokeColor"></button>
-        <button id="violetBtn" class="strokeColor"></button>
-        <button id="strokeSmallBtn" class="strokeSize">S</button>
-        <button id="strokeMediumBtn" class="strokeSize">M</button>
-        <button id="strokeLargeBtn" class="strokeSize">L</button>
-        <button id="newGameBtn">New Game</button>
-        <div id="sidDiv"></div>
+
+        <div>
+            <div id="brushPanel">
+                <div id="colorPanel">
+                    <button id="blackBtn" class="strokeColor"></button>
+                    <button id="brownBtn" class="strokeColor"></button>
+                    <button id="redBtn" class="strokeColor"></button>
+                    <button id="orangeBtn" class="strokeColor"></button>
+                    <button id="yellowBtn" class="strokeColor"></button>
+                    <button id="greenBtn" class="strokeColor"></button>
+                    <button id="blueBtn" class="strokeColor"></button>
+                    <button id="indigoBtn" class="strokeColor"></button>
+                    <button id="violetBtn" class="strokeColor"></button>
+                </div>
+                <div id="sizePanel">
+                    <button id="strokeSmallBtn" class="strokeSize">S</button>
+                    <button id="strokeMediumBtn" class="strokeSize">M</button>
+                    <button id="strokeLargeBtn" class="strokeSize">L</button>
+                </div>
+            </div>
+    
+            <div id="controlPanel">
+                <button id="sendBtn" onclick="send()">Send</button>
+                <button id="createRoomBtn">New Game</button>
+                <button id="clearBtn">Clear</button>
+                <button id="eraseBtn">Erase</button>
+            </div>
+            
+            <div id="inviteDiv">room id:</div>
+        </div>
+    
         <div id="log">ai response:</div>
     </div>
 </body>
+
 </html>

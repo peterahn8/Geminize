@@ -17,6 +17,7 @@ button {
   padding: 10px;
   border-radius: 5px;
   font-size: 14px;
+  border: 1px solid black;
 }
 
 /* #container {
@@ -29,13 +30,23 @@ button {
   border: 5px solid black;
 }
 
+#colorPanel {
+  display: flex;
+  flex-direction: row;
+}
+
 .strokeColor {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 
 #blackBtn { background-color: #000000; }
+#brownBtn { background-color: #A52A2A; }
 #redBtn { background-color: #FF0000; }
 #orangeBtn { background-color: #FFA500; }
 #yellowBtn { background-color: #FFFF00; }
@@ -43,6 +54,11 @@ button {
 #blueBtn { background-color: #0000FF; }
 #indigoBtn { background-color: #4B0082; }
 #violetBtn { background-color: #8A2BE2; }
+
+#sizePanel {
+  display: flex;
+  flex-direction: row;
+}
 
 .strokeSize {
     width: 35px;
@@ -54,9 +70,15 @@ button {
     font-size: 16px;
 }
 
+#inviteDiv {
+  margin-top: 10px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
 #log {
     margin-top: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid black;
     padding: 10px;
     height: 100px;
     overflow-y: auto;

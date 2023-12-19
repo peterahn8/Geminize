@@ -2,133 +2,116 @@ const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
-const newGameBtn = document.getElementById("newGameBtn");
+const createRoomBtn = document.getElementById("createRoomBtn");
 const log = document.getElementById("log");
-const sidDiv = document.getElementById("sidDiv");
-
-const blackBtn = document.getElementById("blackBtn");
-const redBtn = document.getElementById("redBtn");
-const orangeBtn = document.getElementById("orangeBtn");
-const yellowBtn = document.getElementById("yellowBtn");
-const greenBtn = document.getElementById("greenBtn");
-const blueBtn = document.getElementById("blueBtn");
-const indigoBtn = document.getElementById("indigoBtn");
-const violetBtn = document.getElementById("violetBtn");
-
-const strokeSmallBtn = document.getElementById("strokeSmallBtn");
-const strokeMediumBtn = document.getElementById("strokeMediumBtn");
-const strokeLargeBtn = document.getElementById("strokeLargeBtn");
-
-const BLACK = "#000000";
-const RED = "#FF0000";
-const ORANGE = "#FFA500";
-const YELLOW = "#FFFF00";
-const GREEN = "#008000";
-const BLUE = "#0000FF";
-const INDIGO = "#4B0082";
-const VIOLET = "#8A2BE2";
-
-const strokeSmall = 2;
-const strokeMedium = 4;
-const strokeLarge = 10;
-
-let globalClear;
-let isErasing;
-let strokeSize = strokeMedium; // default to medium stroke
-let strokeColor = "#000000"; // default to black color
+const inviteDiv = document.getElementById("inviteDiv");
 
 let socket;
+let globalClear;
 
-clearBtn.addEventListener("click", function() { globalClear() });
-eraseBtn.addEventListener("click", function() {
+// Default settings
+let isErasing;
+let strokeSize = 4;
+let strokeColor = "#000000";
+
+// Brush settings
+const colorMap = {
+    "blackBtn": "#000000", "redBtn": "#FF0000", "orangeBtn": "#FFA500",
+    "yellowBtn": "#FFFF00", "greenBtn": "#008000", "blueBtn": "#0000FF",
+    "indigoBtn": "#4B0082", "violetBtn": "#8A2BE2", "brownBtn": "#A52A2A"
+};
+const sizeMap = {
+    "strokeSmallBtn": 2, "strokeMediumBtn": 4, "strokeLargeBtn": 10
+};
+
+// Event listeners and utility functions for buttons
+function setupEventListeners() {
+    assignBrushSettings(colorMap, value => strokeColor = value);
+    assignBrushSettings(sizeMap, value => strokeSize = value);
+
+    clearBtn.addEventListener("click", () => globalClear());
+    eraseBtn.addEventListener("click", toggleEraseMode);
+
+    createRoomBtn.addEventListener("click", createNewRoom);
+    document.addEventListener("DOMContentLoaded", joinExistingRoom);
+}
+
+function assignBrushSettings(buttonMap, action) {
+    Object.entries(buttonMap).forEach(([buttonId, value]) => {
+        const button = document.getElementById(buttonId);
+        button.addEventListener("click", () => action(value));
+    });
+}
+
+function toggleEraseMode() {
     isErasing = !isErasing;
-    if (isErasing) {
-        eraseBtn.textContent = "Draw";
-    } else {
-        eraseBtn.textContent = "Erase";
-    }
-});
+    eraseBtn.textContent = isErasing ? "Draw" : "Erase";
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const gameId = queryParams.get('gameId');
-
-    if (gameId) {
-        console.log("Attempting to join game with ID:", gameId);
-        socket.emit('join', gameId);
-
-        // Hide the 'New Game' button if joining an existing game
-        newGameBtn.style.display = 'none';
-    }
-});
-
-newGameBtn.addEventListener("click", function() {
+function generateRoomId() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let randomString = "";
     for (let i = 0; i < 8; i++) {
         randomString += characters.charAt(Math.floor(Math.random() * characters.length));
     }
+    return randomString;
+}
 
-    sidDiv.innerHTML = randomString;
-    console.log("Generating a random string to use for 'gameId': " + randomString);
-    socket.emit("join", randomString);
-});
+function createNewRoom() {
+    const roomId = generateRoomId();
+    inviteDiv.innerHTML = "room id: " + roomId;
+    console.log("Generating a random 'roomId': " + roomId);
+    socket.emit("join", roomId);
+}
 
-blackBtn.addEventListener("click", function() { strokeColor = BLACK; });
-redBtn.addEventListener("click", function() { strokeColor = RED; });
-orangeBtn.addEventListener("click", function() { strokeColor = ORANGE; });
-yellowBtn.addEventListener("click", function() { strokeColor = YELLOW; });
-greenBtn.addEventListener("click", function() { strokeColor = GREEN; });
-blueBtn.addEventListener("click", function() { strokeColor = BLUE; });
-indigoBtn.addEventListener("click", function() { strokeColor = INDIGO; });
-violetBtn.addEventListener("click", function() { strokeColor = VIOLET; });
+function joinExistingRoom() {
+    const queryParams = new URLSearchParams(window.location.search);
+    const roomId = queryParams.get("roomId");
+    if (roomId) {
+        console.log("Attempting to join on roomId: ", roomId);
+        socket.emit("join", roomId);
+        createRoomBtn.style.display = "none";
+    }
+}
 
-strokeSmallBtn.addEventListener("click", function() { strokeSize = strokeSmall; });
-strokeMediumBtn.addEventListener("click", function() { strokeSize = strokeMedium; });
-strokeLargeBtn.addEventListener("click", function() { strokeSize = strokeLarge; });
-
-var s1 = function(sketch) {
-    sketch.setup = function() {
+// p5 stuff
+var s1 = sketch => {
+    sketch.setup = () => {
         sketch.createCanvas(400, 400, canvas);
         sketch.background(255);
-        globalClear = function() { 
+        globalClear = () => {
             sketch.clear();
-            sketch.background(255); 
+            sketch.background(255);
         };
-    }
-    sketch.draw = function() {
+    };
+
+    sketch.draw = () => {
         if (isErasing) {
             sketch.erase();
-            sketch.strokeWeight(strokeSize);
         } else {
             sketch.noErase();
             sketch.stroke(strokeColor);
-            sketch.strokeWeight(strokeSize);
         }
-        
+        sketch.strokeWeight(strokeSize);
+
         if (sketch.mouseIsPressed) {
             sketch.line(sketch.pmouseX, sketch.pmouseY, sketch.mouseX, sketch.mouseY);
         }
     };
 };
 
-function send() {
-    let canvasPayload = getCanvas()
-
-    console.log("this is gonna send");
-    socket.emit("drawing", canvasPayload);
-}
-
-function clear() {
-    const context = canvas.getContext("2d");
-    context.clearRect(0, 0, canvas.width, canvas.width);
-}
-
 function getCanvas() {
     let w = canvas.width;
     let h = canvas.height;
     let canvasPayload = canvas.getContext("2d").getImageData(0, 0, w, h).data
     return canvasPayload;
+}
+
+function send() {
+    let canvasPayload = getCanvas()
+
+    console.log("this is gonna send");
+    socket.emit("drawing", canvasPayload);
 }
 
 function startSocket() {
@@ -149,7 +132,7 @@ function startSocket() {
     // Listen for errors
     socket.on("error", (error) => {
         console.log("server encountered an error:", error);
-      });
+    });
 
     // Listen for close
     socket.on("disconnect", (event) => {
@@ -158,5 +141,6 @@ function startSocket() {
 }
 
 // init
-new p5(s1)
+setupEventListeners();
+new p5(s1);
 startSocket();
