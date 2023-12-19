@@ -1,6 +1,7 @@
 const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
 const wordDiv = document.getElementById("wordDiv");
+const winnerDiv = document.getElementById("winnerDiv");
 const copyBtn = document.getElementById("copyBtn");
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
@@ -129,8 +130,11 @@ function send() {
     console.log("this is gonna send");
     socket.emit("drawing", canvasPayload);
 
-    sendBtn.disabled = true;
-    sendBtn.innerHTML = "waiting..."
+    // TODO: Maybe don't disable the send button on sends, let the user send as
+    // many times as they want and figure out a way to make it all play nice on
+    // the backend.  Maybe a queue system?
+    // sendBtn.disabled = true;
+    // sendBtn.innerHTML = "waiting..."
 }
 
 function startSocket() {
@@ -163,7 +167,14 @@ function startSocket() {
 
     // Listen for the word to guess
     socket.on("showWordToGuess", (data) => {
+        startBtn.disabled = true;
         wordDiv.innerHTML = "Draw this word: " + data;
+    })
+
+    // Listen for game won
+    socket.on("gameWon", (data) => {
+        startBtn.disabled = false;
+        winnerDiv.innerHTML = "The winner is: " + data;
     })
 
     // Listen for errors

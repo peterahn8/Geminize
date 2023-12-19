@@ -8,6 +8,7 @@ from model.server_class import Server
 
 import google.generativeai as genai
 
+# TODO: Remove the model stuff from here, it was just for testing
 genai.configure(api_key=config('API_KEY'))
 model = genai.GenerativeModel('gemini-pro-vision')
 
@@ -54,19 +55,11 @@ def handle_start(data):
 
 @socketio.on("drawing")
 def handle_drawing(data):
-    imgMem = Image.frombytes(mode="RGBA", size=(400, 400), data=data)
+    game = server.get_game_from_player(request.sid)
 
-    memBuffer = io.BytesIO()
-    imgMem.save(memBuffer, format='PNG')
-    # TODO: Delete this, save the image as a file to double check it
-    imgMem.save("output.png")
-    memBuffer.seek(0)
-    imgPNG = Image.open(memBuffer)
+    ok = game.guess_word(request.sid, data)
+    if ok:
+        emit("gameWon", request.sid, to=game.room_id)
 
-    response = model.generate_content(["What do you think this image is? Give a one word answer.", imgPNG], stream=True)
-    response.resolve()
-    print(response.text)
-
-    emit('guessResponse', response.text, room=request.sid)
 
 socketio.run(app, host="0.0.0.0", port=3000)
