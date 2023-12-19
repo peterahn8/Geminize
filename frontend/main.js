@@ -1,12 +1,13 @@
 const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
-const wordDiv = document.getElementById("wordDiv")
+const wordDiv = document.getElementById("wordDiv");
+const copyBtn = document.getElementById("copyBtn");
 const clearBtn = document.getElementById("clearBtn");
 const eraseBtn = document.getElementById("eraseBtn");
 const createRoomBtn = document.getElementById("createRoomBtn");
 const startBtn = document.getElementById("startBtn");
 const log = document.getElementById("log");
-const inviteDiv = document.getElementById("inviteDiv");
+const inviteTxtBox = document.getElementById("inviteTxtBox");
 
 let socket;
 let globalClear;
@@ -31,6 +32,8 @@ function setupEventListeners() {
     assignBrushSettings(colorMap, value => strokeColor = value);
     assignBrushSettings(sizeMap, value => strokeSize = value);
 
+    copyBtn.addEventListener("click", copyToClipboard);
+
     clearBtn.addEventListener("click", () => globalClear());
     eraseBtn.addEventListener("click", toggleEraseMode);
     startBtn.addEventListener("click", startGame);
@@ -44,6 +47,11 @@ function assignBrushSettings(buttonMap, action) {
         const button = document.getElementById(buttonId);
         button.addEventListener("click", () => action(value));
     });
+}
+
+function copyToClipboard() {
+    inviteTxtBox.select();
+    navigator.clipboard.writeText(inviteTxtBox.value);
 }
 
 function toggleEraseMode() {
@@ -66,7 +74,7 @@ function generateRoomId() {
 
 function createNewRoom() {
     const roomId = generateRoomId();
-    inviteDiv.innerHTML = "invite link: localhost:3000/?roomid=" + roomId;
+    inviteTxtBox.value = "localhost:3000/?roomid=" + roomId;
     console.log(`Attempting to join on roomid: "${roomId}" as the leader`);
     socket.emit("join", roomId);
 }
