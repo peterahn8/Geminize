@@ -153,8 +153,6 @@ function startSocket() {
     socket.on("disconnect", (event) => {
         console.log("connection to the server was closed:", event);
     });
-
-    console.log(socket.io.engine.transport.name)
 }
 
 // init
