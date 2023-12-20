@@ -81,18 +81,18 @@ function setDrawingMode(erasing) {
 }
 
 function copyToClipboard() {
-    copyBtn.classList.remove("glowing");
-    if (!startBtn.disabled) {
-        startBtn.classList.add("glowing")
-    }
+    // copyBtn.classList.remove("glowing");
+    // if (!startBtn.disabled) {
+    //     startBtn.classList.add("glowing")
+    // }
 
     inviteCopyTextBox.select();
     navigator.clipboard.writeText(inviteCopyTextBox.value);
 }
 
 function startGame() {
-    copyBtn.classList.remove("glowing");
-    startBtn.classList.remove("glowing");
+    // copyBtn.classList.remove("glowing");
+    // startBtn.classList.remove("glowing");
     winnerDiv.innerHTML = "";
 
     globalClear();
@@ -114,8 +114,8 @@ function createNewRoom() {
     console.log(`Attempting to join on roomid: "${roomId}" as the leader`);
 
     createRoomBtn.disabled = true;
-    createRoomBtn.classList.remove("glowing");
-    copyBtn.classList.add("glowing");
+    // createRoomBtn.classList.remove("glowing");
+    // copyBtn.classList.add("glowing");
 
     console.log(`frontend emitting 'join'. Attempting to create room on roomid: "${roomId}" as a leader`);
     socket.emit("join", roomId);
@@ -241,7 +241,7 @@ function startSocket() {
     // Listen for the word to guess
     socket.on("showWordToGuess", (data) => {
         sendBtn.disabled = false;
-        sendBtn.classList.add("glowing");
+        // sendBtn.classList.add("glowing");
         startBtn.disabled = true;
         wordDiv.innerHTML = "Draw this word: " + data;
     })
@@ -250,9 +250,9 @@ function startSocket() {
     socket.on("gameWon", (data) => {
         console.log("received 'gameWon' from backend")
         sendBtn.disabled = true;
-        sendBtn.classList.remove("glowing");
+        // sendBtn.classList.remove("glowing");
         startBtn.disabled = false;
-        startBtn.classList.add("glowing");
+        // startBtn.classList.add("glowing");
         winnerDiv.innerHTML = "The winner is: " + data;
     })
 
