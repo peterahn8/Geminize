@@ -5,62 +5,89 @@ const winnerDiv = document.getElementById("winnerDiv");
 const copyBtn = document.getElementById("copyBtn");
 const sendBtn = document.getElementById("sendBtn");
 const clearBtn = document.getElementById("clearBtn");
+const drawBtn = document.getElementById("drawBtn");
 const eraseBtn = document.getElementById("eraseBtn");
 const createRoomBtn = document.getElementById("createRoomBtn");
 const startBtn = document.getElementById("startBtn");
-const log = document.getElementById("log");
-const inviteTxtBox = document.getElementById("inviteTxtBox");
+const logDiv = document.getElementById("logDiv");
+const lobbyDiv = document.getElementById("lobbyDiv");
+const inviteCopyTextBox = document.getElementById("inviteCopyTextBox");
 
 let socket;
 let globalClear;
+let playerlist;
 
 // Default settings
 let isErasing;
-let strokeSize = 4;
+let strokeSize = 12;
 let strokeColor = "#000000";
 
 // Brush settings
 const colorMap = {
-    "blackBtn": "#000000", "redBtn": "#FF0000", "orangeBtn": "#FFA500",
-    "yellowBtn": "#FFFF00", "greenBtn": "#008000", "blueBtn": "#0000FF",
-    "indigoBtn": "#4B0082", "violetBtn": "#8A2BE2", "brownBtn": "#A52A2A"
+    "blackBtn": "#000000", "redBtn": "#FF0000", "orangeBtn": "#ff9100",
+    "yellowBtn": "#fcba03", "greenBtn": "#008000", "blueBtn": "#0000FF",
+    "indigoBtn": "#4B0082", "tanBtn": "#fab875", "brownBtn": "#4f2800"
 };
 const sizeMap = {
-    "strokeSmallBtn": 2, "strokeMediumBtn": 4, "strokeLargeBtn": 10
+    "strokeSmallBtn": 6, "strokeMediumBtn": 12, "strokeLargeBtn": 18
 };
 
 // Event listeners and utility functions for buttons
 function setupEventListeners() {
-    assignBrushSettings(colorMap, value => strokeColor = value);
-    assignBrushSettings(sizeMap, value => strokeSize = value);
+    assignStrokeListeners(colorMap, value => strokeColor = value);
+    assignStrokeListeners(sizeMap, value => strokeSize = value);
 
     copyBtn.addEventListener("click", copyToClipboard);
 
     sendBtn.addEventListener("click", send);
     clearBtn.addEventListener("click", () => globalClear());
-    eraseBtn.addEventListener("click", toggleEraseMode);
+    drawBtn.addEventListener("click", () => setDrawingMode(false));
+    eraseBtn.addEventListener("click", () => setDrawingMode(true));
     startBtn.addEventListener("click", startGame);
 
     createRoomBtn.addEventListener("click", createNewRoom);
     document.addEventListener("DOMContentLoaded", joinExistingRoom);
 }
 
-function assignBrushSettings(buttonMap, action) {
+function assignStrokeListeners(buttonMap, action) {
     Object.entries(buttonMap).forEach(([buttonId, value]) => {
         const button = document.getElementById(buttonId);
-        button.addEventListener("click", () => action(value));
+        button.addEventListener("click", () => {
+            // Remove selected class from all buttons
+            Object.keys(buttonMap).forEach(id => {
+                document.getElementById(id).classList.remove("selected");
+            });
+            // Add selected class to clicked button
+            button.classList.add("selected");
+            action(value);
+        });
     });
 }
 
-function copyToClipboard() {
-    inviteTxtBox.select();
-    navigator.clipboard.writeText(inviteTxtBox.value);
+function setDrawingMode(erasing) {
+    isErasing = erasing;
+
+    // Remove the "selected" class from both buttons
+    drawBtn.classList.remove("selected");
+    eraseBtn.classList.remove("selected");
+
+    // Add the "selected" class to the appropriate button
+    if (isErasing) {
+        eraseBtn.classList.add("selected");
+    } else {
+        drawBtn.classList.add("selected");
+    }
 }
 
-function toggleEraseMode() {
-    isErasing = !isErasing;
-    eraseBtn.textContent = isErasing ? "Draw" : "Erase";
+function copyToClipboard() {
+    inviteCopyTextBox.select();
+    navigator.clipboard.writeText(inviteCopyTextBox.value);
 }
+
+// function toggleEraseMode() {
+//     isErasing = !isErasing;
+//     eraseBtn.textContent = isErasing ? "Draw" : "Erase";
+// }
 
 function startGame() {
     globalClear();
@@ -78,8 +105,14 @@ function generateRoomId() {
 
 function createNewRoom() {
     const roomId = generateRoomId();
-    inviteTxtBox.value = "localhost:3000/?roomid=" + roomId;
+    inviteCopyTextBox.value = "localhost:3000/?roomid=" + roomId;
     console.log(`Attempting to join on roomid: "${roomId}" as the leader`);
+    
+    // TODO: will rework this so i dont have to keep resetting this string
+    //       maybe in a separate div
+    console.log("resetting the lobbyDiv string");
+    lobbyDiv.innerHTML = "Players in the lobby: <br>";
+
     socket.emit("join", roomId);
 }
 
@@ -107,15 +140,19 @@ var s1 = sketch => {
 
     sketch.draw = () => {
         if (isErasing) {
-            sketch.erase();
+            // sketch.cursor(WAIT)
+            sketch.stroke(255);
         } else {
-            sketch.noErase();
             sketch.stroke(strokeColor);
         }
         sketch.strokeWeight(strokeSize);
 
-        if (sketch.mouseIsPressed) {
-            sketch.line(sketch.pmouseX, sketch.pmouseY, sketch.mouseX, sketch.mouseY);
+        let offsetX = -5;
+        let offsetY = -5;
+
+        // Check if left mouse button is pressed
+        if (sketch.mouseIsPressed && sketch.mouseButton === sketch.LEFT) {
+            sketch.line(sketch.pmouseX + offsetX, sketch.pmouseY + offsetY, sketch.mouseX + offsetX, sketch.mouseY + offsetY);
         }
     };
 };
@@ -165,11 +202,14 @@ function startSocket() {
     // Listen for when the game is ready to be started
     socket.on("showStartButton", (data) => {
         console.log("show start button message from backend: " + data);
+        playerlist = data.split(",");
+        playerlist.forEach((player) => lobbyDiv.innerHTML += `<br>${player}`);
         startBtn.disabled = false;
     })
 
     // Listen for the word to guess
     socket.on("showWordToGuess", (data) => {
+        createRoomBtn.disabled = true;
         sendBtn.disabled = false;
         startBtn.disabled = true;
         wordDiv.innerHTML = "Draw this word: " + data;
@@ -177,6 +217,7 @@ function startSocket() {
 
     // Listen for game won
     socket.on("gameWon", (data) => {
+        createRoomBtn.disabled = false;
         sendBtn.disabled = true;
         startBtn.disabled = false;
         winnerDiv.innerHTML = "The winner is: " + data;

@@ -7,6 +7,9 @@
     <title>gaem</title>
 
     <link rel="stylesheet" href="./styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
     <script src="./p5.js"></script>
     <!-- Maybe switch this out with a local copy? -->
@@ -17,47 +20,119 @@
 </head>
 
 <body>
-    <div id="container">
-        <div id="winnerDiv"></div>
+    <div id="header">header area</div>
+    <div id="column1">
+        <div id="instructionsPanel">TODO: an overview + instructions could go in this general area:
+            <br><br><br><br>
+            <br> 1. how to create a game and invite friends
+            <br><br><br><br>
+            <br> 2. how to send drawings
+            <br><br><br><br>
+            <br> 3. explanation of game rules (what even are they)
+            <br><br><br><br>
+        </div>
+        <div id="roomControlsPanel">
+            <button id="createRoomBtn">Create Game</button>
+            <button id="copyBtn">Copy Invite Link</button>
+            <button id="startBtn" disabled>Start Game</button>
+        </div>
+
+        <input readonly type="text" id="inviteCopyTextBox">
+
+        <!-- <div id="inviteLinkPanel">
+            
+        </div> -->
+    </div>
+
+    <div id="column2">
+        <div id="winnerDiv">announce winner here</div>
+
         <canvas id="canvas0"></canvas>
-        <div id="wordDiv"></div>
+
+        <div id="wordDiv">announce word to draw here</div>
         <div>
             <div id="brushPanel">
                 <div id="colorPanel">
-                    <button id="blackBtn" class="strokeColor"></button>
+                    <button id="blackBtn" class="strokeColor selected"></button>
                     <button id="brownBtn" class="strokeColor"></button>
                     <button id="redBtn" class="strokeColor"></button>
                     <button id="orangeBtn" class="strokeColor"></button>
                     <button id="yellowBtn" class="strokeColor"></button>
+                    <button id="tanBtn" class="strokeColor"></button>
                     <button id="greenBtn" class="strokeColor"></button>
                     <button id="blueBtn" class="strokeColor"></button>
                     <button id="indigoBtn" class="strokeColor"></button>
-                    <button id="violetBtn" class="strokeColor"></button>
                 </div>
-                <div id="sizePanel">
-                    <button id="strokeSmallBtn" class="strokeSize">S</button>
-                    <button id="strokeMediumBtn" class="strokeSize">M</button>
-                    <button id="strokeLargeBtn" class="strokeSize">L</button>
+                
+                <div id="sizesAndControlsPanel">
+                    <button id="strokeSmallBtn" class="strokeSize">
+                        <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px"
+                            viewBox="0 0 264.564 264.564" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path
+                                        d="M132.281,264.564c51.24,0,92.931-41.681,92.931-92.918c0-50.18-87.094-164.069-90.803-168.891L132.281,0l-2.128,2.773
+                               c-3.704,4.813-90.802,118.71-90.802,168.882C39.352,222.883,81.042,264.564,132.281,264.564z" />
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+                    <button id="strokeMediumBtn" class="strokeSize selected">
+                        <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px"
+                            viewBox="0 0 264.564 264.564" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path
+                                        d="M132.281,264.564c51.24,0,92.931-41.681,92.931-92.918c0-50.18-87.094-164.069-90.803-168.891L132.281,0l-2.128,2.773
+                               c-3.704,4.813-90.802,118.71-90.802,168.882C39.352,222.883,81.042,264.564,132.281,264.564z" />
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+                    <button id="strokeLargeBtn" class="strokeSize">
+                        <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px"
+                            viewBox="0 0 264.564 264.564" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path
+                                        d="M132.281,264.564c51.24,0,92.931-41.681,92.931-92.918c0-50.18-87.094-164.069-90.803-168.891L132.281,0l-2.128,2.773
+                               c-3.704,4.813-90.802,118.71-90.802,168.882C39.352,222.883,81.042,264.564,132.281,264.564z" />
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+
+                    <div class="midSeparator"></div>
+                    
+                    <button id="drawBtn" class="selected">Draw</button>
+                    <button id="eraseBtn">Erase</button>
+                    <button id="clearBtn">Clear</button>
                 </div>
             </div>
 
-            <div id="controlPanel">
-                <button id="sendBtn" disabled>Send</button>
-                <button id="createRoomBtn">New Game</button>
-                <button id="startBtn" disabled>Start Game</button>
-                <button id="clearBtn">Clear</button>
-                <button id="eraseBtn">Erase</button>
+            <div id="sendPanel">
+                <button id="sendBtn" disabled>Send your drawing!</button>
             </div>
-
-            <div id="invitePanel">
-                <div>Invite link:</div>
-                <input type="text" id="inviteTxtBox"></div>
-                <button id="copyBtn">Copy invite link</button>
-            </div>
-
-            <div id="log">ai response:</div>
         </div>
     </div>
+
+    <div id="column3">
+        <div id="lobbyDiv">Players in the lobby: <br></div>
+        <div id="logDiv">Gemini guessed...
+            <br><br>
+
+            testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup
+
+            <br><br>
+
+            *maybe have other players' drawings + other players' AI guesses somewhere around here too
+        </div>
+    </div>
+
+    <div id="footer">footer area</div>
 </body>
 
 </html>
