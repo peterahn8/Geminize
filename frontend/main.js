@@ -10,12 +10,13 @@ const eraseBtn = document.getElementById("eraseBtn");
 const createRoomBtn = document.getElementById("createRoomBtn");
 const startBtn = document.getElementById("startBtn");
 const logDiv = document.getElementById("logDiv");
-const lobbyDiv = document.getElementById("lobbyDiv");
+const lobbyPanel = document.getElementById("lobbyPanel");
+const playerList = document.getElementById("playerList");
+const emptyLobbyMessage = document.getElementById("emptyLobbyMessage");
 const inviteCopyTextBox = document.getElementById("inviteCopyTextBox");
 
 let socket;
 let globalClear;
-let playerlist;
 
 // Default settings
 let isErasing;
@@ -80,6 +81,9 @@ function setDrawingMode(erasing) {
 }
 
 function copyToClipboard() {
+    copyBtn.classList.remove("glowing");
+    startBtn.classList.add("glowing")
+
     inviteCopyTextBox.select();
     navigator.clipboard.writeText(inviteCopyTextBox.value);
 }
@@ -90,6 +94,8 @@ function copyToClipboard() {
 // }
 
 function startGame() {
+    startBtn.classList.remove("glowing");
+
     globalClear();
     socket.emit("start", "");
 }
@@ -107,12 +113,10 @@ function createNewRoom() {
     const roomId = generateRoomId();
     inviteCopyTextBox.value = "localhost:3000/?roomid=" + roomId;
     console.log(`Attempting to join on roomid: "${roomId}" as the leader`);
-    
-    // TODO: will rework this so i dont have to keep resetting this string
-    //       maybe in a separate div
-    console.log("resetting the lobbyDiv string");
-    lobbyDiv.innerHTML = "Players in the lobby: <br>";
 
+    createRoomBtn.disabled = true;
+    createRoomBtn.classList.remove("glowing");
+    copyBtn.classList.add("glowing");
     socket.emit("join", roomId);
 }
 
@@ -120,9 +124,18 @@ function joinExistingRoom() {
     const queryParams = new URLSearchParams(window.location.search);
     const roomId = queryParams.get("roomid");
     if (roomId) {
+        createRoomBtn.style.display = "none";
+        startBtn.style.display = "none";
+        inviteCopyTextBox.value = "localhost:3000/?roomid=" + roomId;
+        
         console.log(`Attempting to join on roomid: "${roomId}" as a follower`);
         socket.emit("join", roomId);
-        createRoomBtn.style.display = "none";
+    }
+}
+
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
     }
 }
 
@@ -199,27 +212,47 @@ function startSocket() {
         sendBtn.innerHTML = "Send";
     })
 
+    socket.on("updatePlayerList", (data) => {
+        console.log("updating player list")
+
+        removeAllChildNodes(playerList);
+
+        const playersStrArr = data.split(",");
+        playersStrArr.forEach((player) => {
+            const div = document.createElement("div");
+            div.innerHTML = `<br>${player}`;
+            playerList.appendChild(div);
+        });
+    })
+
+    socket.on("joinError", () => {
+        document.getElementById("overlay").style.display = "block";
+        canvas.disabled = true;
+    });
+
+
     // Listen for when the game is ready to be started
     socket.on("showStartButton", (data) => {
         console.log("show start button message from backend: " + data);
-        playerlist = data.split(",");
-        playerlist.forEach((player) => lobbyDiv.innerHTML += `<br>${player}`);
+    
         startBtn.disabled = false;
-    })
+        createRoomBtn.disabled = true;
+    });
 
     // Listen for the word to guess
     socket.on("showWordToGuess", (data) => {
-        createRoomBtn.disabled = true;
         sendBtn.disabled = false;
+        sendBtn.classList.add("glowing");
         startBtn.disabled = true;
         wordDiv.innerHTML = "Draw this word: " + data;
     })
 
     // Listen for game won
     socket.on("gameWon", (data) => {
-        createRoomBtn.disabled = false;
         sendBtn.disabled = true;
+        sendBtn.classList.remove("glowing");
         startBtn.disabled = false;
+        startBtn.classList.add("glowing");
         winnerDiv.innerHTML = "The winner is: " + data;
     })
 

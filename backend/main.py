@@ -32,14 +32,19 @@ def handle_join(data):
     if not(server.room_exists(data)):
         server.create_game(player, data)
         print("creating game room on leader")
+        game = server.get_game_from_room(data)
 
     else: 
         server.add_player_to_game(player, data)
+        game = server.get_game_from_room(data)
 
-        # check game and send 
-        if server.game_waiting_for_start(data):
-            game = server.get_game_from_room(data)
-            emit('showStartButton', ",".join(game.players_joined), room=data)
+    # update player list in front end
+    players_list = ",".join(game.players_joined)
+    emit('updatePlayerList', players_list, room=data)
+
+    # check game and send 
+    if server.game_waiting_for_start(data):
+        emit('showStartButton', players_list, room=data)
 
     # add mapping of player to room id so that backend can tell
     # which game to map requests to    
@@ -60,6 +65,21 @@ def handle_drawing(data):
     ok = game.guess_word(request.sid, data)
     if ok:
         emit("gameWon", request.sid, to=game.room_id)
+
+@socketio.on("disconnect")
+def handle_disconnect():
+    player = request.sid
+    room_id = server.get_room_id_from_player(player)
+
+    if room_id:
+        game = server.get_game_from_room(room_id)
+        if game and player in game.players_joined:
+            game.remove_player(player)
+            players_list = ",".join(game.players_joined)
+            emit('updatePlayerList', players_list, room=room_id)
+
+        # Remove player to room mapping
+        server.remove_player_from_room_mapping(player)
 
 
 socketio.run(app, host="0.0.0.0", port=3000)

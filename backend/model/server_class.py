@@ -31,7 +31,13 @@ class Server:
             self.player_to_room_dict[player] = room_id
         else:
             print(f"{player} is already assigned to another room: {self.player_to_room_dict[player]}")
+            
+    def remove_player_from_room_mapping(self, player):
+        if player in self.player_to_room_dict:
+            del self.player_to_room_dict[player]
 
+    def get_room_id_from_player(self, player):
+        return self.player_to_room_dict.get(player)
     
     def create_game(self, player, room_id):
         self.room_id_to_game_dict[room_id] = Game(room_id, player)

@@ -10,7 +10,7 @@ import time
 genai.configure(api_key=config('API_KEY'))
 model = genai.GenerativeModel('gemini-pro-vision')
 
-GAME_CAPACITY = 2
+GAME_CAPACITY = 3
 #WORD_BANK = ["dog", "cat", "smiley face", "bus", "sun", "chicken", "apple"]
 WORD_BANK = ["smiley face", "sun"]
 class Status(Enum):
@@ -42,7 +42,11 @@ class Game:
         if self.full():
             self.move_to_wait_for_start()
 
-    
+    def remove_player(self, player):
+        if player in self.players_joined:
+            self.players_joined.remove(player)
+            print("server removed ", player, " from game. Game now contains these players: ", self.players_joined)
+
     def move_to_wait_for_start(self):
         self.status = Status.WAITING_FOR_START
 

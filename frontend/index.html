@@ -32,9 +32,9 @@
             <br><br><br><br>
         </div>
         <div id="roomControlsPanel">
-            <button id="createRoomBtn">Create Game</button>
+            <button id="createRoomBtn" class="glowing">Create Game</button>
             <button id="copyBtn">Copy Invite Link</button>
-            <button id="startBtn" disabled>Start Game</button>
+            <button id="startBtn">Start Game</button>
         </div>
 
         <input readonly type="text" id="inviteCopyTextBox">
@@ -63,53 +63,23 @@
                     <button id="blueBtn" class="strokeColor"></button>
                     <button id="indigoBtn" class="strokeColor"></button>
                 </div>
-                
+
                 <div id="sizesAndControlsPanel">
                     <button id="strokeSmallBtn" class="strokeSize">
-                        <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px"
-                            viewBox="0 0 264.564 264.564" xml:space="preserve">
-                            <g>
-                                <g>
-                                    <path
-                                        d="M132.281,264.564c51.24,0,92.931-41.681,92.931-92.918c0-50.18-87.094-164.069-90.803-168.891L132.281,0l-2.128,2.773
-                               c-3.704,4.813-90.802,118.71-90.802,168.882C39.352,222.883,81.042,264.564,132.281,264.564z" />
-                                </g>
-                            </g>
-                        </svg>
+                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeSmall" alt="Brush size small">
                     </button>
                     <button id="strokeMediumBtn" class="strokeSize selected">
-                        <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px"
-                            viewBox="0 0 264.564 264.564" xml:space="preserve">
-                            <g>
-                                <g>
-                                    <path
-                                        d="M132.281,264.564c51.24,0,92.931-41.681,92.931-92.918c0-50.18-87.094-164.069-90.803-168.891L132.281,0l-2.128,2.773
-                               c-3.704,4.813-90.802,118.71-90.802,168.882C39.352,222.883,81.042,264.564,132.281,264.564z" />
-                                </g>
-                            </g>
-                        </svg>
+                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeMedium" alt="Brush size medium">
                     </button>
                     <button id="strokeLargeBtn" class="strokeSize">
-                        <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px"
-                            viewBox="0 0 264.564 264.564" xml:space="preserve">
-                            <g>
-                                <g>
-                                    <path
-                                        d="M132.281,264.564c51.24,0,92.931-41.681,92.931-92.918c0-50.18-87.094-164.069-90.803-168.891L132.281,0l-2.128,2.773
-                               c-3.704,4.813-90.802,118.71-90.802,168.882C39.352,222.883,81.042,264.564,132.281,264.564z" />
-                                </g>
-                            </g>
-                        </svg>
+                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeLarge" alt="Brush size large">
                     </button>
 
                     <div class="midSeparator"></div>
-                    
-                    <button id="drawBtn" class="selected">Draw</button>
-                    <button id="eraseBtn">Erase</button>
-                    <button id="clearBtn">Clear</button>
+
+                    <button id="drawBtn" class="selected"><img src="svg/brush-3-svgrepo-com.svg" id="svgStrokeBrush" alt="Brush"></button>
+                    <button id="eraseBtn"><img src="svg/eraser-svgrepo-com.svg" id="svgStrokeEraser" alt="eraser"></button>
+                    <button id="clearBtn"><img src="svg/trash-bin-trash-svgrepo-com.svg" id="svgCanvasClear" alt=""></button>
                 </div>
             </div>
 
@@ -120,11 +90,15 @@
     </div>
 
     <div id="column3">
-        <div id="lobbyDiv">Players in the lobby: <br></div>
+        <div id="lobbyPanel">
+            <div>Players: <br><br></div>
+            <div id="playerList"></div>
+        </div>
         <div id="logDiv">Gemini guessed...
             <br><br>
 
-            testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup
+            testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing
+            markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup
 
             <br><br>
 
@@ -133,6 +107,10 @@
     </div>
 
     <div id="footer">footer area</div>
+    <div id="inProgressOverlay" style="display: none;">
+        <div id="inProgressOverlay-content">Game is already in progress. Please try again later.</div>
+    </div>
+    
 </body>
 
 </html>
