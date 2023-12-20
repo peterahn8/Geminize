@@ -1,7 +1,12 @@
+@font-face {
+  font-family: 'IndieFlower';
+  src: url('fonts/IndieFlower-Regular.ttf') format('truetype');
+}
+
 html, body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'IndieFlower', sans-serif;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 24px;
   overflow-y: auto;
 }
 
@@ -12,16 +17,16 @@ body {
   gap: 10px; /* spacing between the 3 grid columns */
   justify-content: center; /* center the whole grid horizontally */
   align-items: start; /* center the whole grid vertically */
-  padding: 10px;
   height: 100vh;
   margin: 0;
-  background-color: rgb(76, 88, 145);
+  background-color: rgba(76, 88, 145, 0.8);
   overflow-y: auto;
 }
 
 button {
-  font-size: 16px;
+  font-family: 'IndieFlower', sans-serif;
   font-weight: 700;
+  font-size: 24px;
   cursor: pointer;
   border: none;
   margin: 5px;
@@ -30,7 +35,7 @@ button {
   border: 3px solid black;
   background-color: rgb(210, 210, 210);
   transition: background-color 0.3s, color 0.3s, transform 0.1s;
-  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.7);
 }
 
 button:hover {
@@ -92,7 +97,7 @@ button:active {
 
 #instructionsPanel {
   background-color: white;
-  margin-bottom: 50px;
+  margin: 20px;
   border: 3px solid black;
   border-radius: 5px;
   padding: 5px;
@@ -148,6 +153,7 @@ button:active {
 
 #wordDiv {
   background-color: white;
+  width: 50%;
   margin: 10px;
   border: 3px solid black;
   border-radius: 3px;
@@ -166,6 +172,10 @@ button:active {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.strokeColor:hover {
+  box-shadow: 0 0 3px 3px rgba(200, 200, 200, 0.5);
 }
 
 #blackBtn { background-color: #000000; }
@@ -253,7 +263,7 @@ button:active {
   margin-bottom: 20px;
 }
 
-#logDiv {
+/* #logDiv {
     border: 3px solid black;
     border-radius: 3px;
     padding: 5px;
@@ -262,7 +272,7 @@ button:active {
     overflow-y: auto;
     background-color: white;
     text-align: center;
-}
+} */
 
 .selected {
   background-color: white;
@@ -271,25 +281,4 @@ button:active {
 
 .midSeparator {
   margin: auto;
-}
-
-#inProgressOverlay {
-  position: fixed; /* Sit on top of the page content */
-  display: none; /* Hidden by default */
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-  z-index: 2; /* Specify a stack order in case you're using a z-index scale */
-  cursor: not-allowed; /* Change the cursor to indicate it's not clickable */
-  text-align: center;
-  padding-top: 20%; /* Location of the content box */
-}
-
-#inProgressOverlay-content {
-  color: white;
-  font-size: 20px;
 }

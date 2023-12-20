@@ -20,17 +20,22 @@
 </head>
 
 <body>
-    <div id="header">header area</div>
+    <div id="header">doodle dash</div>
     <div id="column1">
-        <div id="instructionsPanel">TODO: an overview + instructions could go in this general area:
-            <br><br><br><br>
-            <br> 1. how to create a game and invite friends
-            <br><br><br><br>
-            <br> 2. how to send drawings
-            <br><br><br><br>
-            <br> 3. explanation of game rules (what even are they)
-            <br><br><br><br>
+        <div id="instructionsPanel">
+            <strong>*Create a Game and Invite Friends*</strong>
+            <br> - Click "Create Game" to make a game room and a shareable link.
+            <br> - Share the link with your friends so they can join you!
+            <br> - Once your friends have joined, click on the "Start" button to begin the game!
+        
+            <br><br>
+            <strong>*Rules*</strong>
+            <br> - All players will be given the same word to draw.
+            <br> - Draw an image of the word as quickly as you can. You only have 10 seconds!
+            <br> - Gemini will try to guess what you drew.
+            <br> - *game ends after n rounds or n correct guesses*
         </div>
+
         <div id="roomControlsPanel">
             <button id="createRoomBtn" class="glowing">Create Game</button>
             <button id="copyBtn">Copy Invite Link</button>
@@ -40,8 +45,7 @@
         <input readonly type="text" id="inviteCopyTextBox">
 
         <!-- <div id="inviteLinkPanel">
-            
-        </div> -->
+        </div> --> 
     </div>
 
     <div id="column2">
@@ -66,20 +70,20 @@
 
                 <div id="sizesAndControlsPanel">
                     <button id="strokeSmallBtn" class="strokeSize">
-                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeSmall" alt="Brush size small">
+                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeSmall" draggable="false" alt="Brush size small">
                     </button>
                     <button id="strokeMediumBtn" class="strokeSize selected">
-                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeMedium" alt="Brush size medium">
+                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeMedium" draggable="false" alt="Brush size medium">
                     </button>
                     <button id="strokeLargeBtn" class="strokeSize">
-                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeLarge" alt="Brush size large">
+                        <img src="svg/water-drop-svgrepo-com.svg" id="svgStrokeLarge" draggable="false" alt="Brush size large">
                     </button>
 
                     <div class="midSeparator"></div>
 
-                    <button id="drawBtn" class="selected"><img src="svg/brush-3-svgrepo-com.svg" id="svgStrokeBrush" alt="Brush"></button>
-                    <button id="eraseBtn"><img src="svg/eraser-svgrepo-com.svg" id="svgStrokeEraser" alt="eraser"></button>
-                    <button id="clearBtn"><img src="svg/trash-bin-trash-svgrepo-com.svg" id="svgCanvasClear" alt=""></button>
+                    <button id="drawBtn" class="selected"><img src="svg/brush-3-svgrepo-com.svg" id="svgStrokeBrush" draggable="false" alt="Brush"></button>
+                    <button id="eraseBtn"><img src="svg/eraser-svgrepo-com.svg" id="svgStrokeEraser" draggable="false" alt="eraser"></button>
+                    <button id="clearBtn"><img src="svg/trash-bin-trash-svgrepo-com.svg" id="svgCanvasClear" draggable="false" alt=""></button>
                 </div>
             </div>
 
@@ -94,7 +98,7 @@
             <div>Players: <br><br></div>
             <div id="playerList"></div>
         </div>
-        <div id="logDiv">Gemini guessed...
+        <!-- <div id="logDiv">Gemini guessed...
             <br><br>
 
             testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing markup<br>testing
@@ -103,12 +107,10 @@
             <br><br>
 
             *maybe have other players' drawings + other players' AI guesses somewhere around here too
-        </div>
+        </div> -->
     </div>
 
-    <div id="footer">footer area</div>
-    <div id="inProgressOverlay" style="display: none;">
-        <div id="inProgressOverlay-content">Game is already in progress. Please try again later.</div>
+    <!-- <div id="footer">footer area</div> -->
     </div>
     
 </body>
