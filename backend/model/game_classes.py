@@ -88,7 +88,8 @@ class Game:
         response = model.generate_content(["What is this drawing? Answer in one word only. Do not add capitalization or punctuation. Do not add leading or trailing spaces.", imgPNG], stream=True)
         response.resolve()
         print(response.text)
-        guess = response.text
+        # added strip method for testing purposes. ideally we won't need it
+        guess = response.text.strip()
 
         print("backend emitting 'guessResponse'")
         print("the AI's guess string is", len(guess), "characters long. it should be", len(self.current_word), "characters long.")

@@ -93,6 +93,7 @@ function copyToClipboard() {
 function startGame() {
     copyBtn.classList.remove("glowing");
     startBtn.classList.remove("glowing");
+    winnerDiv.innerHTML = "";
 
     globalClear();
     socket.emit("start", "");

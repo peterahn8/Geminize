@@ -133,6 +133,8 @@ button:active {
 
 #winnerDiv {
   background-color: white;
+  width: 200px; /* TODO: stop using width and height for this*/
+  height: 50px;
   margin: 10px;
   border: 3px solid black;
   border-radius: 3px;
