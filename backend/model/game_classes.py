@@ -3,6 +3,8 @@ import random
 import datetime
 from PIL import Image
 import io
+from flask import request
+from flask_socketio import emit
 import google.generativeai as genai
 from decouple import config
 import time
@@ -12,7 +14,7 @@ model = genai.GenerativeModel('gemini-pro-vision')
 
 GAME_CAPACITY = 3
 #WORD_BANK = ["dog", "cat", "smiley face", "bus", "sun", "chicken", "apple"]
-WORD_BANK = ["smiley face", "sun"]
+WORD_BANK = ["face", "sun"]
 class Status(Enum):
     WAITING_FOR_PLAYERS = 1 # less than the max have joined
     WAITING_FOR_START = 2 # lobby is full but the leaders has not pressed start
@@ -74,31 +76,32 @@ class Game:
             True if the guess is correct, False otherwise.
         """
 
-        # TODO: This is the real code path, but we are commenting it out and
-        # using fake code to simulate a faster response
-        #imgMem = Image.frombytes(mode="RGBA", size=(400, 400), data=data)
+        imgMem = Image.frombytes(mode="RGBA", size=(400, 400), data=data)
 
-        #memBuffer = io.BytesIO()
-        #imgMem.save(memBuffer, format='PNG')
+        memBuffer = io.BytesIO()
+        imgMem.save(memBuffer, format='PNG')
         ## TODO: Delete this, save the image as a file to double check it
-        #imgMem.save("output.png")
-        #memBuffer.seek(0)
-        #imgPNG = Image.open(memBuffer)
+        imgMem.save("output.png")
+        memBuffer.seek(0)
+        imgPNG = Image.open(memBuffer)
 
-        #response = model.generate_content(["What do you think this image is? Give a one word answer.", imgPNG], stream=True)
-        #response.resolve()
-        #print(response.text)
-        #guess = response.text
+        response = model.generate_content(["What is this drawing? Answer in one word only. Do not add capitalization or punctuation. Do not add leading or trailing spaces.", imgPNG], stream=True)
+        response.resolve()
+        print(response.text)
+        guess = response.text
 
-        #emit('guessResponse', response.text, room=request.sid)
+        print("backend emitting 'guessResponse'")
+        print("the AI's guess string is", len(guess), "characters long. it should be", len(self.current_word), "characters long.")
+        emit('guessResponse', response.text, room=request.sid)
 
         # TODO: Delete this line its for simulating a fast response
-        guess = self.current_word
+        # guess = self.current_word
 
         if guess == self.current_word:
+            print("testing finish game")
             self.finish_game(winner=player)
             # TODO: Delete this, its just for simulating
-            time.sleep(1)
+            # time.sleep(1)
             return True
         self.used_words.add(guess)
         return False

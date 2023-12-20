@@ -40,10 +40,12 @@ def handle_join(data):
 
     # update player list in front end
     players_list = ",".join(game.players_joined)
+    print("backend emitting 'updatePlayerList'")
     emit('updatePlayerList', players_list, room=data)
 
     # check game and send 
     if server.game_waiting_for_start(data):
+        print("backend emitting 'showStartButton'")
         emit('showStartButton', players_list, room=data)
 
     # add mapping of player to room id so that backend can tell
@@ -64,6 +66,7 @@ def handle_drawing(data):
 
     ok = game.guess_word(request.sid, data)
     if ok:
+        print("backend emitting 'gameWon' to the room")
         emit("gameWon", request.sid, to=game.room_id)
 
 @socketio.on("disconnect")
@@ -76,6 +79,8 @@ def handle_disconnect():
         if game and player in game.players_joined:
             game.remove_player(player)
             players_list = ",".join(game.players_joined)
+
+            print("backend emitting 'updatePlayerList'")
             emit('updatePlayerList', players_list, room=room_id)
 
         # Remove player to room mapping

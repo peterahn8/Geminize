@@ -82,18 +82,16 @@ function setDrawingMode(erasing) {
 
 function copyToClipboard() {
     copyBtn.classList.remove("glowing");
-    startBtn.classList.add("glowing")
+    if (!startBtn.disabled) {
+        startBtn.classList.add("glowing")
+    }
 
     inviteCopyTextBox.select();
     navigator.clipboard.writeText(inviteCopyTextBox.value);
 }
 
-// function toggleEraseMode() {
-//     isErasing = !isErasing;
-//     eraseBtn.textContent = isErasing ? "Draw" : "Erase";
-// }
-
 function startGame() {
+    copyBtn.classList.remove("glowing");
     startBtn.classList.remove("glowing");
 
     globalClear();
@@ -117,6 +115,8 @@ function createNewRoom() {
     createRoomBtn.disabled = true;
     createRoomBtn.classList.remove("glowing");
     copyBtn.classList.add("glowing");
+
+    console.log(`frontend emitting 'join'. Attempting to create room on roomid: "${roomId}" as a leader`);
     socket.emit("join", roomId);
 }
 
@@ -128,7 +128,7 @@ function joinExistingRoom() {
         startBtn.style.display = "none";
         inviteCopyTextBox.value = "localhost:3000/?roomid=" + roomId;
         
-        console.log(`Attempting to join on roomid: "${roomId}" as a follower`);
+        console.log(`frontend emitting 'join'. Attempting to join on roomid: "${roomId}" as a follower`);
         socket.emit("join", roomId);
     }
 }
@@ -180,7 +180,6 @@ function getCanvas() {
 function send() {
     let canvasPayload = getCanvas()
 
-    console.log("this is gonna send");
     socket.emit("drawing", canvasPayload);
 
     // TODO: Maybe don't disable the send button on sends, let the user send as
@@ -209,7 +208,6 @@ function startSocket() {
     socket.on("guessResponse", (data) => {
         console.log("received AI guess from backend: " + data);
         sendBtn.disabled = false;
-        sendBtn.innerHTML = "Send";
     })
 
     socket.on("updatePlayerList", (data) => {
@@ -249,6 +247,7 @@ function startSocket() {
 
     // Listen for game won
     socket.on("gameWon", (data) => {
+        console.log("received 'gameWon' from backend")
         sendBtn.disabled = true;
         sendBtn.classList.remove("glowing");
         startBtn.disabled = false;
