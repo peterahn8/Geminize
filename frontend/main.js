@@ -112,6 +112,7 @@ function createNewRoom() {
     console.log(`Attempting to join on roomid: "${roomId}" as the leader`);
 
     createRoomBtn.disabled = true;
+    startBtn.disabled = false;
     // createRoomBtn.classList.remove("glowing");
     // copyBtn.classList.add("glowing");
 
