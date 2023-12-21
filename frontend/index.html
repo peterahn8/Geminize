@@ -23,17 +23,17 @@
     <div id="header">doodle dash</div>
     <div id="column1">
         <div id="instructionsPanel">
-            <strong>*Create a Game and Invite Friends*</strong>
-            <br> - Click "Create Game" to make a game room and a shareable link.
-            <br> - Share the link with your friends so they can join you!
-            <br> - Once your friends have joined, click on the "Start" button to begin the game!
+            <strong>*Getting started*</strong>
+            <br> - Create a game to generate a room and an invite link.
+            <br> - Share the link with your friends so they can join you.
+            <br> - Start the game whenever you're ready!
         
             <br><br>
             <strong>*Rules*</strong>
+            <!-- <br> - Draw an image of the word as quickly as you can. You only have 10 seconds! -->
             <br> - All players will be given the same word to draw.
-            <br> - Draw an image of the word as quickly as you can. You only have 10 seconds!
-            <br> - Gemini will try to guess what you drew.
-            <br> - *game ends after n rounds or n correct guesses*
+            <br> - Gemini will try to guess what you drew etc...
+            <!-- <br> - *game ends after n rounds or n correct guesses* -->
         </div>
 
         <div id="roomControlsPanel">
@@ -44,16 +44,21 @@
 
         <input readonly type="text" id="inviteCopyTextBox">
 
+        <div id="lobbyPanel">
+            <div>Players:</div>
+            <div id="playerList"></div>
+        </div>
+
         <!-- <div id="inviteLinkPanel">
         </div> --> 
     </div>
 
     <div id="column2">
-        <div id="winnerDiv">announce winner here</div>
+        <div id="announcerDiv">waiting for game creation...</div>
 
         <canvas id="canvas0"></canvas>
 
-        <div id="wordDiv">announce word to draw here</div>
+        <div id="wordDiv">waiting for a word...</div>
         <div>
             <div id="brushPanel">
                 <div id="colorPanel">
@@ -81,8 +86,8 @@
 
                     <div class="midSeparator"></div>
 
-                    <button id="drawBtn" class="selected"><img src="svg/brush-3-svgrepo-com.svg" id="svgStrokeBrush" draggable="false" alt="Brush"></button>
-                    <button id="eraseBtn"><img src="svg/eraser-svgrepo-com.svg" id="svgStrokeEraser" draggable="false" alt="eraser"></button>
+                    <button id="drawBtn" class="selected"><img src="svg/brush-3-svgrepo-com.svg" id="svgBrush" draggable="false" alt="Brush"></button>
+                    <button id="eraseBtn"><img src="svg/eraser-svgrepo-com.svg" id="svgEraser" draggable="false" alt="eraser"></button>
                     <button id="clearBtn"><img src="svg/trash-bin-trash-svgrepo-com.svg" id="svgCanvasClear" draggable="false" alt=""></button>
                 </div>
             </div>
@@ -94,10 +99,7 @@
     </div>
 
     <div id="column3">
-        <div id="lobbyPanel">
-            <div>Players: <br><br></div>
-            <div id="playerList"></div>
-        </div>
+
         <!-- <div id="logDiv">Gemini guessed...
             <br><br>
 

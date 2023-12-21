@@ -1,7 +1,7 @@
 const body = document.getElementsByName("body");
 const canvas = document.getElementById("canvas0");
 const wordDiv = document.getElementById("wordDiv");
-const winnerDiv = document.getElementById("winnerDiv");
+const announcerDiv = document.getElementById("announcerDiv");
 const copyBtn = document.getElementById("copyBtn");
 const sendBtn = document.getElementById("sendBtn");
 const clearBtn = document.getElementById("clearBtn");
@@ -93,9 +93,7 @@ function copyToClipboard() {
 function startGame() {
     // copyBtn.classList.remove("glowing");
     // startBtn.classList.remove("glowing");
-    winnerDiv.innerHTML = "";
 
-    globalClear();
     socket.emit("start", "");
 }
 
@@ -219,7 +217,7 @@ function startSocket() {
         const playersStrArr = data.split(",");
         playersStrArr.forEach((player) => {
             const div = document.createElement("div");
-            div.innerHTML = `<br>${player}`;
+            div.innerHTML = `${player}`;
             playerList.appendChild(div);
         });
     })
@@ -240,6 +238,8 @@ function startSocket() {
 
     // Listen for the word to guess
     socket.on("showWordToGuess", (data) => {
+        globalClear();
+        announcerDiv.innerHTML = "Game has started! DRAW!!";
         sendBtn.disabled = false;
         // sendBtn.classList.add("glowing");
         startBtn.disabled = true;
@@ -253,7 +253,8 @@ function startSocket() {
         // sendBtn.classList.remove("glowing");
         startBtn.disabled = false;
         // startBtn.classList.add("glowing");
-        winnerDiv.innerHTML = "The winner is: " + data;
+        console.log(data);
+        announcerDiv.innerHTML = "The winner is: " + data;
     })
 
     // Listen for errors

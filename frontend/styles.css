@@ -13,7 +13,7 @@ html, body {
 body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 2fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   gap: 10px; /* spacing between the 3 grid columns */
   justify-content: center; /* center the whole grid horizontally */
   align-items: start; /* center the whole grid vertically */
@@ -62,28 +62,13 @@ button:active {
   grid-row: 1 / 2;
 }
 
-#column1, #column2 {
+#column1, #column2, #column3 {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  grid-template-rows: 1fr 2fr 1fr;
   grid-row: 2 / 3;
   height: 100%;
-}
-
-#column3 {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  grid-template-rows: 1fr 2fr 1fr;
-  grid-row: 2 / 3;
-  height: 100%;
-}
-
-#column1, #column2, #column3 {
-  grid-row: 2 / 3;
 }
 
 #footer {
@@ -100,7 +85,7 @@ button:active {
   margin: 20px;
   border: 3px solid black;
   border-radius: 5px;
-  padding: 5px;
+  padding: 10px;
 }
 
 #roomControlsPanel {
@@ -131,15 +116,16 @@ button:active {
   font-family: 'Roboto', sans-serif;
   border: 3px solid black;
   border-radius: 3px;
-  padding: 10px;
+  margin-top: 10px;
+  padding: 5px;
   width: 50%;
   text-align: center;
 }
 
-#winnerDiv {
+#announcerDiv {
   background-color: white;
-  width: 200px; /* TODO: stop using width and height for this*/
-  height: 50px;
+  width: auto;
+  height: auto;
   margin: 10px;
   border: 3px solid black;
   border-radius: 3px;
@@ -153,7 +139,8 @@ button:active {
 
 #wordDiv {
   background-color: white;
-  width: 50%;
+  width: auto;
+  height: auto;
   margin: 10px;
   border: 3px solid black;
   border-radius: 3px;
@@ -189,6 +176,8 @@ button:active {
 #indigoBtn { background-color: #4B0082; }
 
 #sizesAndControlsPanel {
+  font-family: sans-serif;
+  font-size: 12px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -221,23 +210,23 @@ button:active {
   height: 30px;
 }
 
-#svgStrokeBrush {
-  width: 35px;
-  height: 35px;
-}
-
-#svgStrokeEraser {
-  width: 35px;
-  height: 35px;
-}
-
-#svgCanvasClear {
-  width: 35px;
-  height: 35px;
+#drawBtn, #eraseBtn, #clearBtn {
+  display: flex;
+  flex-direction: column;
 }
 
 #clearBtn {
-  background-color: rgb(255, 130, 130);
+  background-color: rgba(255, 80, 80, 0.8);
+}
+
+#clearBtn:hover {
+  background-color: rgba(255, 0, 0, 0.8);
+  transition: background-color 0.3s, color 0.3s, transform 0.1s;
+}
+
+#svgBrush, #svgEraser, #svgCanvasClear {
+  width: 35px;
+  height: 35px;
 }
 
 #sendPanel {
@@ -255,12 +244,12 @@ button:active {
   border: 3px solid black;
   border-radius: 3px;
   padding: 5px;
-  height: 200px;
-  width: 200px;
+  height: 100%;
+  width: 50%;
   overflow-y: auto;
   background-color: white;
   text-align: center;
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 /* #logDiv {
@@ -276,7 +265,7 @@ button:active {
 
 .selected {
   background-color: white;
-  box-shadow: 0 0 3px 3px rgba(200, 200, 200, 0.3);
+  box-shadow: 0 0 4px 4px rgba(200, 200, 200, 0.3);
 }
 
 .midSeparator {
