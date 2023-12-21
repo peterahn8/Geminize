@@ -53,12 +53,16 @@ def handle_join(data):
     server.add_player_to_room_mapping(player, data)
 
 
-@socketio.on("start")
+@socketio.on("startGame")
 def handle_start(data):
     # move game to start state, pick a random word, send word to front end
     game  = server.start_game(request.sid)
     emit('showWordToGuess', game.current_word, room=game.room_id)
 
+@socketio.on("startCountdown")
+def handle_start_countdown():
+    room_id = server.get_room_id_from_player(request.sid)
+    emit('startClientCountdown', room=room_id)
 
 @socketio.on("drawing")
 def handle_drawing(data):

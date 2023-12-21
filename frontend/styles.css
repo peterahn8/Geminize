@@ -126,7 +126,6 @@ button:active {
   background-color: white;
   width: auto;
   height: auto;
-  margin: 10px;
   border: 3px solid black;
   border-radius: 3px;
   padding: 5px;
@@ -139,12 +138,14 @@ button:active {
 
 #wordDiv {
   background-color: white;
+  font-size: 36px;
   width: auto;
   height: auto;
-  margin: 10px;
+  margin: 5px;
   border: 3px solid black;
   border-radius: 3px;
   padding: 5px;
+  visibility: hidden; /* hide until shown in js */
 }
 
 #colorPanel {

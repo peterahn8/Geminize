@@ -44,7 +44,7 @@ function setupEventListeners() {
     clearBtn.addEventListener("click", () => globalClear());
     drawBtn.addEventListener("click", () => setDrawingMode(false));
     eraseBtn.addEventListener("click", () => setDrawingMode(true));
-    startBtn.addEventListener("click", startGame);
+    startBtn.addEventListener("click", signalCountdownPropagation);
 
     createRoomBtn.addEventListener("click", createNewRoom);
     document.addEventListener("DOMContentLoaded", joinExistingRoom);
@@ -81,20 +81,13 @@ function setDrawingMode(erasing) {
 }
 
 function copyToClipboard() {
-    // copyBtn.classList.remove("glowing");
-    // if (!startBtn.disabled) {
-    //     startBtn.classList.add("glowing")
-    // }
-
     inviteCopyTextBox.select();
     navigator.clipboard.writeText(inviteCopyTextBox.value);
 }
 
-function startGame() {
-    // copyBtn.classList.remove("glowing");
-    // startBtn.classList.remove("glowing");
-
-    socket.emit("start", "");
+function signalCountdownPropagation() {
+    startBtn.disabled = true;
+    socket.emit("startCountdown");
 }
 
 function generateRoomId() {
@@ -113,8 +106,6 @@ function createNewRoom() {
 
     createRoomBtn.disabled = true;
     startBtn.disabled = false;
-    // createRoomBtn.classList.remove("glowing");
-    // copyBtn.classList.add("glowing");
 
     console.log(`frontend emitting 'join'. Attempting to create room on roomid: "${roomId}" as a leader`);
     socket.emit("join", roomId);
@@ -137,6 +128,25 @@ function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
+}
+
+function startCountdown(duration) {
+    let timer = duration, seconds;
+    let countdownInterval = setInterval(() => {
+        seconds = parseInt(timer % 60, 10);
+
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        announcerDiv.innerHTML = "Game starts in: " + seconds;
+
+        if (--timer < 0) {
+            clearInterval(countdownInterval);
+
+            // Notify backend that the game is starting
+            socket.emit("startGame", "");
+            announcerDiv.innerHTML = "Draw this word:";
+        }
+    }, 1000);
 }
 
 // p5 stuff
@@ -228,7 +238,6 @@ function startSocket() {
         canvas.disabled = true;
     });
 
-
     // Listen for when the game is ready to be started
     socket.on("showStartButton", (data) => {
         console.log("show start button message from backend: " + data);
@@ -237,14 +246,19 @@ function startSocket() {
         createRoomBtn.disabled = true;
     });
 
+    // Listen for the countdown, which is sent to all clients
+    socket.on("startClientCountdown", () => {
+        startCountdown(5);
+    });
+
     // Listen for the word to guess
     socket.on("showWordToGuess", (data) => {
         globalClear();
-        announcerDiv.innerHTML = "Game has started! DRAW!!";
         sendBtn.disabled = false;
         // sendBtn.classList.add("glowing");
         startBtn.disabled = true;
-        wordDiv.innerHTML = "Draw this word: " + data;
+        wordDiv.innerHTML = data;
+        wordDiv.style.visibility = "visible";
     })
 
     // Listen for game won
