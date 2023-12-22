@@ -261,8 +261,8 @@ button:active {
   border: 3px solid black;
   border-radius: 3px;
   padding: 5px;
-  height: 100%;
-  width: 50%;
+  height: 125px;
+  width: 90%;
   overflow-y: auto;
   background-color: white;
   text-align: center;

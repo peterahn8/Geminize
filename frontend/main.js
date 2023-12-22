@@ -236,7 +236,7 @@ function startSocket() {
     // Listen for the AI's guess
     socket.on("guessResponse", (data) => {
         console.log("received AI guess from backend: " + data);
-        sendBtn.disabled = false;
+        // sendBtn.disabled = false;
     })
 
     socket.on("updatePlayerList", (data) => {

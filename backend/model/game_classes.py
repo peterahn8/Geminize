@@ -13,21 +13,19 @@ model = genai.GenerativeModel('gemini-pro-vision')
 
 GAME_CAPACITY = 10
 
-# WORD_BANK = [
-#     "apple", "backpack", "bag", "ball", "banana", "bed", "belt", "bird", "boat",
-#     "book", "bottle", "bowl", "bracelet", "brush", "bus", "camera", "cap", "car",
-#     "cat", "chair", "chicken", "clock", "coat", "comb", "computer", "cup", "desk",
-#     "dog", "door", "dress", "eraser", "face", "fan", "fish", "flower", "fork",
-#     "fridge", "glass", "glasses", "gloves", "glue", "grape", "hat", "headphones",
-#     "heater", "house", "jacket", "jeans", "jug", "kiwi", "knife", "lamp", "lemon",
-#     "mango", "marker", "microwave", "moon", "necklace", "notebook", "orange", "oven",
-#     "pan", "pants", "peach", "pen", "pencil", "phone", "plate", "pot", "radio", "ring",
-#     "ruler", "scarf", "scissors", "shirt", "shoe", "shoes", "skirt", "socks", "sofa",
-#     "sponge", "spoon", "star", "strawberry", "sun", "sunglasses", "t-shirt", "table",
-#     "tape", "toaster", "toothbrush", "tree", "tv", "umbrella", "watch", "window"
-# ]
-
-WORD_BANK = ["face"]
+WORD_BANK = [
+    "apple", "backpack", "bag", "ball", "banana", "bed", "belt", "bird", "boat",
+    "book", "bottle", "bowl", "bracelet", "brush", "bus", "camera", "cap", "car",
+    "cat", "chair", "chicken", "clock", "coat", "comb", "computer", "cup", "desk",
+    "dog", "door", "dress", "eraser", "face", "fan", "fish", "flower", "fork",
+    "fridge", "glass", "glasses", "gloves", "glue", "grape", "hat", "headphones",
+    "heater", "house", "jacket", "jeans", "jug", "kiwi", "knife", "lamp", "lemon",
+    "mango", "marker", "microwave", "moon", "necklace", "notebook", "orange", "oven",
+    "pan", "pants", "peach", "pen", "pencil", "phone", "plate", "pot", "radio", "ring",
+    "ruler", "scarf", "scissors", "shirt", "shoe", "shoes", "skirt", "socks", "sofa",
+    "sponge", "spoon", "star", "strawberry", "sun", "sunglasses", "t-shirt", "table",
+    "tape", "toaster", "toothbrush", "tree", "tv", "umbrella", "watch", "window"
+]
 
 class Status(Enum):
     WAITING_FOR_PLAYERS = 1 # less than the max number of players have joined
