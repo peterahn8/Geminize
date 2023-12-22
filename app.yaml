@@ -1,5 +1,5 @@
 runtime: python311  # Specify the Python version
-entrypoint: gunicorn -b :$PORT main:app  # For a Flask app
+entrypoint: gunicorn -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 main:app  # For a Flask socket io app
 
 handlers:
 - url: /.*
