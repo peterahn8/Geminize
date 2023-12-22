@@ -55,7 +55,8 @@ def handle_join(data):
 def handle_start(data):
     # move game to start state, pick a random word, send word to front end
     game  = server.start_game(request.sid)
-    emit('wordToGuess', game.current_word, room=game.room_id)
+    if game.leader == request.sid:
+        emit('wordToGuess', game.current_word, room=game.room_id)
 
 @socketio.on("countdown")
 def handle_start_countdown():

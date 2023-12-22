@@ -204,6 +204,8 @@ function startCountdown(duration) {
             clearInterval(countdownInterval);
 
             // Notify backend that the game is starting
+            console.log("calling globalClear")
+            globalClear();
             socket.emit("startGame", "");
             announcerDiv.innerHTML = "Draw this word:";
         }
@@ -267,7 +269,6 @@ function startSocket() {
 
     // Listen for the word to guess
     socket.on("wordToGuess", (data) => {
-        globalClear();
         showWord(data);
     });
 
