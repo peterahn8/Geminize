@@ -1,0 +1,6 @@
+runtime: python311  # Specify the Python version
+entrypoint: gunicorn -b :$PORT main:app  # For a Flask app
+
+handlers:
+- url: /.*
+  script: auto
