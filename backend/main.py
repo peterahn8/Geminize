@@ -1,5 +1,3 @@
-import io
-
 from PIL import Image
 from decouple import config
 from flask import Flask, send_from_directory, request
@@ -57,9 +55,9 @@ def handle_join(data):
 def handle_start(data):
     # move game to start state, pick a random word, send word to front end
     game  = server.start_game(request.sid)
-    emit('showWordToGuess', game.current_word, room=game.room_id)
+    emit('wordToGuess', game.current_word, room=game.room_id)
 
-@socketio.on("startCountdown")
+@socketio.on("countdown")
 def handle_start_countdown():
     room_id = server.get_room_id_from_player(request.sid)
     emit('startClientCountdown', room=room_id)

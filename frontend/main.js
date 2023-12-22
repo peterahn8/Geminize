@@ -11,6 +11,8 @@ const createRoomBtn = document.getElementById("createRoomBtn");
 const startBtn = document.getElementById("startBtn");
 // const logDiv = document.getElementById("logDiv");
 const lobbyPanel = document.getElementById("lobbyPanel");
+const guessesPanel = document.getElementById("guessesPanel");
+const guessesContent = document.getElementById("guessesContent");
 const playerList = document.getElementById("playerList");
 const emptyLobbyMessage = document.getElementById("emptyLobbyMessage");
 const inviteCopyTextBox = document.getElementById("inviteCopyTextBox");
@@ -44,7 +46,7 @@ function setupEventListeners() {
     clearBtn.addEventListener("click", () => globalClear());
     drawBtn.addEventListener("click", () => setDrawingMode(false));
     eraseBtn.addEventListener("click", () => setDrawingMode(true));
-    startBtn.addEventListener("click", signalCountdownPropagation);
+    startBtn.addEventListener("click", beginPropagatingCountdown);
 
     createRoomBtn.addEventListener("click", createNewRoom);
     document.addEventListener("DOMContentLoaded", joinExistingRoom);
@@ -85,11 +87,6 @@ function copyToClipboard() {
     navigator.clipboard.writeText(inviteCopyTextBox.value);
 }
 
-function signalCountdownPropagation() {
-    startBtn.disabled = true;
-    socket.emit("startCountdown");
-}
-
 function generateRoomId() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let randomString = "";
@@ -99,54 +96,31 @@ function generateRoomId() {
     return randomString;
 }
 
-function createNewRoom() {
-    const roomId = generateRoomId();
-    inviteCopyTextBox.value = "localhost:3000/?roomid=" + roomId;
-    console.log(`Attempting to join on roomid: "${roomId}" as the leader`);
-
-    createRoomBtn.disabled = true;
-    startBtn.disabled = false;
-
-    console.log(`frontend emitting 'join'. Attempting to create room on roomid: "${roomId}" as a leader`);
-    socket.emit("join", roomId);
-}
-
-function joinExistingRoom() {
-    const queryParams = new URLSearchParams(window.location.search);
-    const roomId = queryParams.get("roomid");
-    if (roomId) {
-        createRoomBtn.style.display = "none";
-        startBtn.style.display = "none";
-        inviteCopyTextBox.value = "localhost:3000/?roomid=" + roomId;
-        
-        console.log(`frontend emitting 'join'. Attempting to join on roomid: "${roomId}" as a follower`);
-        socket.emit("join", roomId);
-    }
-}
-
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
 }
 
-function startCountdown(duration) {
-    let timer = duration, seconds;
-    let countdownInterval = setInterval(() => {
-        seconds = parseInt(timer % 60, 10);
+function showWord(wordStr) {
+    sendBtn.disabled = false;
+    startBtn.disabled = true;
+    wordDiv.innerHTML = wordStr;
+    wordDiv.style.visibility = "visible";
+}
 
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+function updatePlayerList(playerListStr) {
+    const playersStrArr = playerListStr.split(",");
+    playersStrArr.forEach((player) => {
+        const div = document.createElement("div");
+        div.innerHTML = `${player}`;
+        playerList.appendChild(div);
+    });
+}
 
-        announcerDiv.innerHTML = "Game starts in: " + seconds;
-
-        if (--timer < 0) {
-            clearInterval(countdownInterval);
-
-            // Notify backend that the game is starting
-            socket.emit("startGame", "");
-            announcerDiv.innerHTML = "Draw this word:";
-        }
-    }, 1000);
+function hideCreateAndStartButtons() {
+    createRoomBtn.style.display = "none";
+    startBtn.style.display = "none";
 }
 
 // p5 stuff
@@ -187,16 +161,59 @@ function getCanvas() {
     return canvasPayload;
 }
 
+// Socket emits
+
+function createNewRoom() {
+    const roomId = generateRoomId();
+    inviteCopyTextBox.value = "localhost:3000/?roomid=" + roomId;
+    console.log(`Attempting to join on roomid: "${roomId}" as the leader`);
+
+    createRoomBtn.disabled = true;
+    startBtn.disabled = false;
+
+    console.log(`frontend emitting 'join'. Attempting to create room on roomid: "${roomId}" as a leader`);
+    socket.emit("join", roomId);
+}
+
+function joinExistingRoom() {
+    const queryParams = new URLSearchParams(window.location.search);
+    const roomId = queryParams.get("roomid");
+    if (roomId) {
+        hideCreateAndStartButtons();
+        inviteCopyTextBox.value = "localhost:3000/?roomid=" + roomId;
+
+        console.log(`frontend emitting 'join'. Attempting to join on roomid: "${roomId}" as a follower`);
+        socket.emit("join", roomId);
+    }
+}
+
+function beginPropagatingCountdown() {
+    startBtn.disabled = true;
+    socket.emit("countdown");
+}
+
+function startCountdown(duration) {
+    let timer = duration, seconds;
+    let countdownInterval = setInterval(() => {
+        seconds = parseInt(timer % 60, 10);
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        announcerDiv.innerHTML = "Game starts in: " + seconds;
+
+        if (--timer < 0) {
+            clearInterval(countdownInterval);
+
+            // Notify backend that the game is starting
+            socket.emit("startGame", "");
+            announcerDiv.innerHTML = "Draw this word:";
+        }
+    }, 1000);
+}
+
 function send() {
     let canvasPayload = getCanvas()
 
     socket.emit("drawing", canvasPayload);
-
-    // TODO: Maybe don't disable the send button on sends, let the user send as
-    // many times as they want and figure out a way to make it all play nice on
-    // the backend.  Maybe a queue system?
-    // sendBtn.disabled = true;
-    // sendBtn.innerHTML = "waiting..."
 }
 
 function startSocket() {
@@ -225,12 +242,7 @@ function startSocket() {
 
         removeAllChildNodes(playerList);
 
-        const playersStrArr = data.split(",");
-        playersStrArr.forEach((player) => {
-            const div = document.createElement("div");
-            div.innerHTML = `${player}`;
-            playerList.appendChild(div);
-        });
+        updatePlayerList(data);
     })
 
     socket.on("joinError", () => {
@@ -241,33 +253,35 @@ function startSocket() {
     // Listen for when the game is ready to be started
     socket.on("showStartButton", (data) => {
         console.log("show start button message from backend: " + data);
-    
+
         startBtn.disabled = false;
         createRoomBtn.disabled = true;
     });
 
     // Listen for the countdown, which is sent to all clients
     socket.on("startClientCountdown", () => {
+        wordDiv.style.visibility = "hidden";
+        removeAllChildNodes(guessesContent);
         startCountdown(5);
     });
 
     // Listen for the word to guess
-    socket.on("showWordToGuess", (data) => {
+    socket.on("wordToGuess", (data) => {
         globalClear();
-        sendBtn.disabled = false;
-        // sendBtn.classList.add("glowing");
-        startBtn.disabled = true;
-        wordDiv.innerHTML = data;
-        wordDiv.style.visibility = "visible";
-    })
+        showWord(data);
+    });
+
+    socket.on("updateGuessList", (data) => {
+        const div = document.createElement("div");
+        div.innerHTML = `I think ${data.player}'s drawing is: ${data.guess}`;
+        guessesContent.appendChild(div);
+    });
 
     // Listen for game won
     socket.on("gameWon", (data) => {
         console.log("received 'gameWon' from backend")
         sendBtn.disabled = true;
-        // sendBtn.classList.remove("glowing");
         startBtn.disabled = false;
-        // startBtn.classList.add("glowing");
         console.log(data);
         announcerDiv.innerHTML = "The winner is: " + data;
     })

@@ -7,10 +7,7 @@
     <title>gaem</title>
 
     <link rel="stylesheet" href="./styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
+    
     <script src="./p5.js"></script>
     <!-- Maybe switch this out with a local copy? -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
@@ -23,17 +20,23 @@
     <div id="header">doodle dash</div>
     <div id="column1">
         <div id="instructionsPanel">
-            <strong>*Getting started*</strong>
-            <br> - Create a game to generate a room and an invite link.
-            <br> - Share the link with your friends so they can join you.
-            <br> - Start the game whenever you're ready!
-        
-            <br><br>
-            <strong>*Rules*</strong>
-            <!-- <br> - Draw an image of the word as quickly as you can. You only have 10 seconds! -->
-            <br> - All players will be given the same word to draw.
-            <br> - Gemini will try to guess what you drew etc...
-            <!-- <br> - *game ends after n rounds or n correct guesses* -->
+            <div class="instructionsHeader">
+                <strong>*Getting started*</strong>
+            </div>
+            <div class="instructionsDetail">
+                - Create a game to generate a room and an invite link.
+                <br> - Share the link with your friends so they can join you.
+                <br> - Start the game whenever you're ready!
+            </div>
+            <br>
+            <div class="instructionsHeader">
+                <strong>*Rules*</strong>
+            </div>
+            <div class="instructionsDetail">
+                - All players will be given the same word to draw.
+                <br> - Gemini will try to guess what you drew.
+                <br> - First player to get Gemini to guess correctly... WINS!
+            </div>
         </div>
 
         <div id="roomControlsPanel">
@@ -55,6 +58,7 @@
 
     <div id="column2">
         <div id="announcerDiv">waiting for game start...</div>
+        
         <div id="wordDiv">placeholder</div>
 
         <canvas id="canvas0"></canvas>
@@ -99,7 +103,12 @@
     </div>
 
     <div id="column3">
-
+        <div id="guessesPanel">
+            Gemini says...
+            <div id="guessesContent">
+                <!-- append each player's guess as a div -->
+            </div>
+        </div>
         <!-- <div id="logDiv">Gemini guessed...
             <br><br>
 

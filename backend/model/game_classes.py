@@ -7,19 +7,33 @@ from flask import request
 from flask_socketio import emit
 import google.generativeai as genai
 from decouple import config
-import time
 
 genai.configure(api_key=config('API_KEY'))
 model = genai.GenerativeModel('gemini-pro-vision')
 
-GAME_CAPACITY = 3
-#WORD_BANK = ["dog", "cat", "smiley face", "bus", "sun", "chicken", "apple"]
-WORD_BANK = ["face", "sun"]
+GAME_CAPACITY = 10
+
+# WORD_BANK = [
+#     "apple", "backpack", "bag", "ball", "banana", "bed", "belt", "bird", "boat",
+#     "book", "bottle", "bowl", "bracelet", "brush", "bus", "camera", "cap", "car",
+#     "cat", "chair", "chicken", "clock", "coat", "comb", "computer", "cup", "desk",
+#     "dog", "door", "dress", "eraser", "face", "fan", "fish", "flower", "fork",
+#     "fridge", "glass", "glasses", "gloves", "glue", "grape", "hat", "headphones",
+#     "heater", "house", "jacket", "jeans", "jug", "kiwi", "knife", "lamp", "lemon",
+#     "mango", "marker", "microwave", "moon", "necklace", "notebook", "orange", "oven",
+#     "pan", "pants", "peach", "pen", "pencil", "phone", "plate", "pot", "radio", "ring",
+#     "ruler", "scarf", "scissors", "shirt", "shoe", "shoes", "skirt", "socks", "sofa",
+#     "sponge", "spoon", "star", "strawberry", "sun", "sunglasses", "t-shirt", "table",
+#     "tape", "toaster", "toothbrush", "tree", "tv", "umbrella", "watch", "window"
+# ]
+
+WORD_BANK = ["face"]
+
 class Status(Enum):
-    WAITING_FOR_PLAYERS = 1 # less than the max have joined
-    WAITING_FOR_START = 2 # lobby is full but the leaders has not pressed start
-    IN_PROGRESS = 3
-    FINISHED = 4
+    WAITING_FOR_PLAYERS = 1 # less than the max number of players have joined
+    WAITING_FOR_START = 2 # lobby is full but the leader has not pressed start
+    IN_PROGRESS = 3 # leader started the game. players can now draw and submit
+    FINISHED = 4 # a player has won the game. the game can be restarted
     ABANDONED = 5
 
 class Game:
@@ -55,7 +69,6 @@ class Game:
         #TODO: stream message to the room that game is full
         # front end will show start button
 
-
     def start_game(self):
         """
         Sets the game status to in progress, chooses a word, and starts the timer.
@@ -87,11 +100,16 @@ class Game:
 
         response = model.generate_content(["What is this drawing? Answer in one word only. Do not add capitalization or punctuation. Do not add leading or trailing spaces.", imgPNG], stream=True)
         response.resolve()
-        print(response.text)
+        # print(response.text)
         
         # added strip method for testing purposes. ideally we won't need it
         guess = response.text.strip()
         print("the AI's guess string is", len(guess), "characters long. it should be", len(self.current_word), "characters long.")
+
+        #  tell the front end what Gemini guessed on which player
+        guess_info = {"player": player, "guess": guess}
+        emit('updateGuessList', guess_info, room=self.room_id)
+
         emit('guessResponse', response.text, room=request.sid)
 
         # TODO: Delete this line its for simulating a fast response
@@ -128,12 +146,13 @@ class Game:
         Picks a random word from the word bank that hasn't been used in this game yet.
         """
         while True:
-            word = random.choice(WORD_BANK)  # Replace `word_bank` with your actual word bank
+            word = random.choice(WORD_BANK)
             if word not in self.used_words:
                 self.current_word = word
                 break
     
     def full(self):
+        print("players in room:", len(self.players_joined), "capacity:", GAME_CAPACITY)
         return len(self.players_joined) == GAME_CAPACITY
 
 

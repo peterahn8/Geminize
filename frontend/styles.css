@@ -32,15 +32,16 @@ button {
   margin: 5px;
   padding: 10px;
   border-radius: 5px;
-  border: 3px solid black;
+  border: 3px solid rgb(0, 0, 0);
   background-color: rgb(210, 210, 210);
   transition: background-color 0.3s, color 0.3s, transform 0.1s;
-  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.7);
+  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
 button:hover {
   background-color: rgb(255, 255, 255);
   color: rgb(0, 0, 0);
+  transform: translate(1px, 1px);
 }
 
 button:disabled {
@@ -50,7 +51,7 @@ button:disabled {
 }
 
 button:active {
-  transform: translate(1px, 1px);
+  transform: translate(2px, 2px);
 }
 
 #header {
@@ -83,15 +84,20 @@ button:active {
 #instructionsPanel {
   background-color: white;
   margin: 20px;
-  border: 3px solid black;
+  border: 5px solid black;
   border-radius: 5px;
   padding: 10px;
+}
+
+.instructionsHeader {
+  font-size: 36px;
 }
 
 #roomControlsPanel {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-top: 50px;
 }
 
 .glowing {
@@ -127,12 +133,12 @@ button:active {
   width: auto;
   height: auto;
   border: 3px solid black;
-  border-radius: 3px;
+  border-radius: 5px;
   padding: 5px;
 }
 
 #canvas0 {
-  border: 5px solid black;
+  border: 8px solid black;
   border-radius: 5px;
 }
 
@@ -146,6 +152,16 @@ button:active {
   border-radius: 3px;
   padding: 5px;
   visibility: hidden; /* hide until shown in js */
+}
+
+#guessesPanel {
+  background-color: white;
+  height: 50%;
+  width: 90%;
+  margin: 20px;
+  border: 5px solid black;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 #colorPanel {
