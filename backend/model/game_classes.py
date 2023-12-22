@@ -137,7 +137,7 @@ class Game:
         """
         self.status = Status.ABANDONED
 
-    def finish_game(self, winner):
+    def finish_game(self):
         """
         Sets the game status to finished and updates the players' scores.
 
@@ -160,6 +160,10 @@ class Game:
                 self.current_word = word
                 break
     
+    def wipe(self):
+        self.winner = None
+        self.winners = []
+
     def full(self):
         print("players in room:", len(self.players_joined), "capacity:", GAME_CAPACITY)
         return len(self.players_joined) == GAME_CAPACITY

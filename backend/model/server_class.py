@@ -59,4 +59,5 @@ class Server:
         # game should be updated with random word as current word and the status as in progress
         game = self.get_game_from_player(player)
         game.start_game()
+        game.wipe()
         return game
