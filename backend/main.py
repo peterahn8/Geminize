@@ -67,9 +67,9 @@ def handle_drawing(data):
     game = server.get_game_from_player(request.sid)
 
     ok = game.guess_word(request.sid, data)
-    if ok:
-        print("backend emitting 'gameWon' to the room")
-        emit("gameWon", request.sid, to=game.room_id)
+    # if ok:
+    #     print("backend emitting 'gameWon' to the room")
+    #     emit("gameWon", request.sid, to=game.room_id)
 
 @socketio.on("disconnect")
 def handle_disconnect():

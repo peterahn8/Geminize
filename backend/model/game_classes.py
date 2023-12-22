@@ -46,6 +46,7 @@ class Game:
         self.used_words = set()
         self.start_time = None
         self.winner = None
+        self.winners = []
 
     def add_player(self, player):
         """
@@ -115,13 +116,19 @@ class Game:
         # TODO: Delete this line its for simulating a fast response
         # guess = self.current_word
 
-        if guess == self.current_word:
-            print("testing finish game")
-            self.finish_game(winner=player)
-            # TODO: Delete this, its just for simulating
-            # time.sleep(1)
+        if guess == self.current_word and not self.winners:
+            self.winners.append(player)
+            print(f"Player {player} wins")
+            emit("gameWon", player, room=self.room_id)
+            self.finish_game()
             return True
-        self.used_words.add(guess)
+        elif guess == self.current_word:
+            # correct guess but not the first one
+            self.winners.append(player)
+            print(f"Player {player} also guessed correctly but was not the first")
+        else:
+            # incorrect guess or the game is already finished
+            self.used_words.add(guess)
         return False
 
     def abandon_game(self):
@@ -138,7 +145,9 @@ class Game:
             winner: The player who won the game.
         """
         self.status = Status.FINISHED
-        self.winner = winner
+        if self.winners:
+            print("emitting finalWinner")
+            emit("finalWinner", self.winners[0], room=self.room_id)
         # Update players' scores based on winner/loser logic
 
     def choose_unused_word(self):

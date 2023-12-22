@@ -286,6 +286,10 @@ function startSocket() {
         announcerDiv.innerHTML = "The winner is: " + data;
     })
 
+    socket.on("finalWinner"), (data) => {
+        console.log(`the actual winner of the game is: ${data}`);
+    }
+
     // Listen for errors
     socket.on("error", (error) => {
         console.log("server encountered an error:", error);
