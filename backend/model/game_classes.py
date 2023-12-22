@@ -145,9 +145,6 @@ class Game:
             winner: The player who won the game.
         """
         self.status = Status.FINISHED
-        if self.winners:
-            print("emitting finalWinner")
-            emit("finalWinner", self.winners[0], room=self.room_id)
         # Update players' scores based on winner/loser logic
 
     def choose_unused_word(self):
